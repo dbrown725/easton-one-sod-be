@@ -65,8 +65,6 @@ public class BullpenSong implements Serializable {
 	@OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-	
-
 
 	@Column(name = "create_time")
 	private LocalDateTime createTime;
@@ -74,13 +72,6 @@ public class BullpenSong implements Serializable {
 	@Column(name = "modify_time")
 	private LocalDateTime modifyTime;
 
-	@Override
-	public String toString() {
-		return "BullpenSong [id=" + id + ", youtubeTitle=" + youtubeTitle + ", youtubeUrl=" + youtubeUrl
-				+ ", actualBandName=" + actualBandName + ", actualSongName=" + actualSongName + ", message=" + message
-				+ ", sortOrder=" + sortOrder + ", user=" + user + ", createTime=" + createTime + ", modifyTime="
-				+ modifyTime + "]";
-	}
 
 	@PrePersist
 	protected void onCreate() {
@@ -182,6 +173,14 @@ public class BullpenSong implements Serializable {
 
 	public void setFormattedCreateTime(String formattedCreateTime) {
 		this.formattedCreateTime = formattedCreateTime;
+	}
+
+	@Override
+	public String toString() {
+		return "BullpenSong [id=" + id + ", youtubeTitle=" + youtubeTitle + ", youtubeUrl=" + youtubeUrl
+				+ ", actualBandName=" + actualBandName + ", actualSongName=" + actualSongName + ", message=" + message
+				+ ", sortOrder=" + sortOrder + ", user=" + user + ", createTime=" + createTime + ", modifyTime="
+				+ modifyTime + "]";
 	}
 
 }

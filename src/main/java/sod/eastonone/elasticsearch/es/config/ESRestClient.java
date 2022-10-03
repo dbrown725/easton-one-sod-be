@@ -20,8 +20,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties("es")
-@Getter
-@Setter
+//@Getter 
+//@Setter //not working, was working then suddenly hostName and port were null
 public class ESRestClient {
 
     private String hostName;
@@ -35,7 +35,7 @@ public class ESRestClient {
 //        final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
 //        credentialsProvider.setCredentials(AuthScope.ANY,
 //                new UsernamePasswordCredentials(username, password));
-
+    	System.out.println("hostName: " + hostName + " port: " + port);
         RestClientBuilder builder = RestClient.builder(new HttpHost(hostName, port));
 //                .setHttpClientConfigCallback(httpClientBuilder ->
 //                        httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider));
@@ -49,4 +49,12 @@ public class ESRestClient {
         // And create the API client
         return new ElasticsearchClient(transport);
     }
+
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
+	}
 }

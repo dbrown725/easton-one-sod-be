@@ -17,7 +17,7 @@ import java.io.IOException;
 public class ESRestControllerAdvice {
     @Getter
     @Setter
-//    @AllArgsConstructor
+//    @AllArgsConstructor //Maven build works fine, for some reason Eclipse doesn't recognize the annotation and I had to add the all args constructor myself
     class Error{
         private String message;
         private int code;

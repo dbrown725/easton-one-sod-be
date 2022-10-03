@@ -164,6 +164,15 @@ public class ESClientConnector {
 //        return songSearchResponse.hits().hits().stream()
 //                .map(Hit::source).collect(Collectors.toList());
     }
+    
+    public String insertSong(Song song) throws IOException {
+        IndexRequest<Song> request = IndexRequest.of(i->
+                i.index(index)
+                        .id(String.valueOf(song.getId()))
+                        .document(song));
+        IndexResponse response = elasticsearchClient.index(request);
+        return response.result().toString();
+    }
 
     private List<Query> prepareQueryList(Employee employee) {
         Map<String, String> conditionMap = new HashMap<>();

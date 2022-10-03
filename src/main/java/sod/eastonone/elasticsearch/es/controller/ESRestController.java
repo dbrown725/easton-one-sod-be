@@ -43,11 +43,11 @@ public class ESRestController {
         return ResponseEntity.ok(employees);
     }
 
-    @PostMapping("/index")
-    public ResponseEntity<String> insertRecords(@RequestBody Employee employee) throws IOException {
-        String status = esService.insertEmployee(employee);
-        return ResponseEntity.ok(status);
-    }
+//    @PostMapping("/index")
+//    public ResponseEntity<String> insertRecords(@RequestBody Employee employee) throws IOException {
+//        String status = esService.insertEmployee(employee);
+//        return ResponseEntity.ok(status);
+//    }
 
     @PostMapping("/index/bulk")
     public ResponseEntity<String> bulkInsertEmployees(@RequestBody List<Employee> employees) throws IOException {
@@ -75,5 +75,11 @@ public class ESRestController {
     public ResponseEntity<List<Song>> fetchSongsWithShouldQuery(@RequestBody Song songSearchRequest) throws IOException {
         List<Song> songs = esService.fetchSongsWithShouldQuery(songSearchRequest);
         return ResponseEntity.ok(songs);
+    }
+    
+    @PostMapping("/index")
+    public ResponseEntity<String> insertRecords(@RequestBody Song song) throws IOException {
+        String status = esService.insertSong(song);
+        return ResponseEntity.ok(status);
     }
 }

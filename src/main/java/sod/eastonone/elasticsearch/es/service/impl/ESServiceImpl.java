@@ -59,4 +59,9 @@ public class ESServiceImpl implements ESService {
     public List<Song> fetchSongsWithShouldQuery(Song song) throws IOException {
         return esClientConnector.fetchSongsWithShouldQuery(song);
     }
+    
+    @Override
+    public String insertSong(Song song) throws IOException {
+        return esClientConnector.insertSong(song);
+    }
 }

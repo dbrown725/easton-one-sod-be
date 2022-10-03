@@ -1,5 +1,14 @@
 type Query {
   bookById(id: ID): Book
+  bullpenSongById(id: ID): Song
+  getAllBullpenSongs(count: Int): [Song]
+  songBySearchText(searchText: String): [Song]
+}
+
+type Mutation {
+   addBullpenSong(title: String!, link: String!, message: String!, bandName: String!, songName: String!, sortOrder: Int!, userId: ID!):Song     
+   updateBullpenSong(id: ID!, title: String, link: String, message: String, bandName: String, songName: String, sortOrder: Int):Song 
+   deleteBullpenSong(id: ID!): Boolean
 }
 
 type Book {
@@ -14,3 +23,20 @@ type Author {
   firstName: String
   lastName: String
 }
+
+type Song {
+  id: ID
+  title: String
+  titleHighlighted: String
+  link: String
+  playlist: String
+  bandName: String
+  songName: String
+  score: Float
+  message: String
+  sortOrder: Int
+  userId: Int
+  createTime: String
+  modifyTime: String
+}
+

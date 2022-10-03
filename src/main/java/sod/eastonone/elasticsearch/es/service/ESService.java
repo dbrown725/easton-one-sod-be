@@ -24,5 +24,7 @@ public interface ESService {
     
     
     public List<Song> fetchSongsWithShouldQuery(Song song) throws IOException;
+    
+    public String insertSong(Song song) throws IOException;
 
 }
