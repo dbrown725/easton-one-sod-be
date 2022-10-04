@@ -2,15 +2,13 @@ package sod.eastonone.elasticsearch.es.model;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import sod.eastonone.elasticsearch.dao.entity.BullpenSong;
+import sod.eastonone.elasticsearch.dao.entity.SodSong;
 
 @Data
 //@NoArgsConstructor //not recognized by Eclipse, had to add a default constructor. Maven build works fine, just Eclipse has the problem.
@@ -63,6 +61,18 @@ public class Song {
 	    userId = bullpenSong.getUser().getId();
 	    createTime = bullpenSong.getCreateTime();
 	    modifyTime = bullpenSong.getModifyTime();
+	}
+	
+	public Song(SodSong sodSong) {
+		id = sodSong.getId();
+	    title = sodSong.getYoutubeTitle();
+	    playlist = sodSong.getYoutubePlaylist();
+	    link = sodSong.getYoutubeUrl();
+	    bandName = sodSong.getActualBandName();
+	    songName = sodSong.getActualSongName();
+	    userId = sodSong.getUser().getId();
+	    createTime = sodSong.getCreateTime();
+	    modifyTime = sodSong.getModifyTime();
 	}
 
 	public Song() {

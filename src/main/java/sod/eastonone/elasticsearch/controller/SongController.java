@@ -15,6 +15,7 @@ import sod.eastonone.elasticsearch.dao.entity.BullpenSong;
 import sod.eastonone.elasticsearch.es.model.Song;
 import sod.eastonone.elasticsearch.es.service.ESService;
 import sod.eastonone.elasticsearch.service.BullpenSongService;
+import sod.eastonone.elasticsearch.service.SodSongService;
 
 @Controller
 public class SongController {
@@ -23,7 +24,7 @@ public class SongController {
 	private BullpenSongService bullpenSongService;
 	
 	@Autowired
-	private ESService esService;
+	private SodSongService sodSongService;
 	
     @QueryMapping
     public Song bullpenSongById(@Argument int id) {
@@ -83,18 +84,27 @@ public class SongController {
     }
     
     @QueryMapping
-    public List<Song> songBySearchText(@Argument String searchText) {
+    public List<Song> songBySearchText(@Argument String searchText) throws IOException{
     	Song song = new Song();
     	song.setTitle(searchText);
     	
     	List<Song> songs = new ArrayList<Song>();
     	try {
-			songs = esService.fetchSongsWithShouldQuery(song);
+			songs = sodSongService.songsBySearchText(searchText);
 		} catch (IOException e) {
 			e.printStackTrace();
+			throw e;
 		}
         return songs;
     }
+
+	@MutationMapping
+	public Song insertSodSong(@Argument String title, @Argument String playlist, @Argument String link,
+			@Argument String bandName, @Argument String songName, @Argument String message, @Argument int userId)
+			throws IOException {
+
+		return sodSongService.createSodSong(title, playlist, link, bandName, songName, message, userId);
+	}
 
 //    @SchemaMapping
 //    public Author author(Book book) {

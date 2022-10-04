@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import sod.eastonone.elasticsearch.dao.entity.SodSong;
 
 @Repository
-public interface SodRepository extends JpaRepository<SodSong, Integer> {
+public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
 }
