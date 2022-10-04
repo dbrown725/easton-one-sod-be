@@ -1,6 +1,5 @@
 package sod.eastonone.elasticsearch.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,18 +12,13 @@ import org.springframework.stereotype.Controller;
 
 import sod.eastonone.elasticsearch.dao.entity.BullpenSong;
 import sod.eastonone.elasticsearch.es.model.Song;
-import sod.eastonone.elasticsearch.es.service.ESService;
 import sod.eastonone.elasticsearch.service.BullpenSongService;
-import sod.eastonone.elasticsearch.service.SodSongService;
 
 @Controller
-public class SongController {
+public class BullpenSongController {
 	
 	@Autowired
 	private BullpenSongService bullpenSongService;
-	
-	@Autowired
-	private SodSongService sodSongService;
 	
     @QueryMapping
     public Song bullpenSongById(@Argument int id) {
@@ -83,31 +77,4 @@ public class SongController {
       return bullpenSongService.deleteBullpenSong(id);
     }
     
-    @QueryMapping
-    public List<Song> songBySearchText(@Argument String searchText) throws IOException{
-    	Song song = new Song();
-    	song.setTitle(searchText);
-    	
-    	List<Song> songs = new ArrayList<Song>();
-    	try {
-			songs = sodSongService.songsBySearchText(searchText);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw e;
-		}
-        return songs;
-    }
-
-	@MutationMapping
-	public Song insertSodSong(@Argument String title, @Argument String playlist, @Argument String link,
-			@Argument String bandName, @Argument String songName, @Argument String message, @Argument int userId)
-			throws IOException {
-
-		return sodSongService.createSodSong(title, playlist, link, bandName, songName, message, userId);
-	}
-
-//    @SchemaMapping
-//    public Author author(Book book) {
-//        return Author.getById(book.getAuthorId());
-//    }
 }
