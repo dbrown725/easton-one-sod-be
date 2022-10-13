@@ -73,6 +73,10 @@ public class SodSongService {
 		return song;
 	}
 	
+	public List<SodSong> getAllSodSongs() {
+		return sodSongRepository.getAllSodSongs();
+	}
+	
     public List<Song> songsBySearchText(String searchText) throws IOException{
     	Song song = new Song();
     	song.setTitle(searchText);
