@@ -17,13 +17,13 @@ public class Song {
 	
 	private int id;
 	
-	@JsonProperty("YouTube Title")
+	@JsonProperty("youtube_title")
     private String title;
 	
-	@JsonProperty("YouTube Playlist")
+	@JsonProperty("youtube_playlist")
     private String playlist;
 	
-	@JsonProperty("YouTube Link")
+	@JsonProperty("youtube_url")
     private String link;
 	
 	@JsonIgnore
@@ -35,13 +35,16 @@ public class Song {
 	@JsonIgnore
 	private String message;
 	
+	@JsonProperty("actual_band_name")
 	private String bandName;
 	
+	@JsonProperty("actual_song_name")
 	private String songName;
 	
 	@JsonIgnore
 	private int sortOrder;
 	
+	@JsonProperty("user_id")
 	private int userId;
 	
 	@JsonIgnore

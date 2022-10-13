@@ -33,7 +33,7 @@ public class ESClientConnector {
     
     public List<Song> fetchSongsWithShouldQuery(Song song) throws IOException {
     	
-    	String searchField = "YouTube Title";
+    	String searchField = "youtube_title";
 
     	HighlightField field = new HighlightField.Builder().build();
 
@@ -83,7 +83,7 @@ public class ESClientConnector {
     
     private List<Query> prepareSongQueryList(Song song) {
         Map<String, String> conditionMap = new HashMap<>();
-        conditionMap.put("YouTube Title.text", song.getTitle());
+        conditionMap.put("youtube_title.text", song.getTitle());
 
         return conditionMap.entrySet().stream()
                 .filter(entry->!ObjectUtils.isEmpty(entry.getValue()))
