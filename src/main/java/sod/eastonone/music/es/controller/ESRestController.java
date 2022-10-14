@@ -30,7 +30,7 @@ public class ESRestController {
     }
     
 	@PostMapping("/index")
-	public ResponseEntity<Song> insertRecords(@RequestBody Song song) throws IOException {
+	public ResponseEntity<Song> createSong(@RequestBody Song song) throws IOException {
 		Song newSong = sodSongService.createSodSong(song.getTitle(), song.getPlaylist(), song.getLink(),
 				song.getBandName(), song.getSongName(), song.getMessage(), song.getUserId());
 		return ResponseEntity.ok(newSong);
