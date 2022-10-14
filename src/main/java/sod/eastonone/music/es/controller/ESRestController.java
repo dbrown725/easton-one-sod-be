@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import sod.eastonone.music.es.model.Song;
 import sod.eastonone.music.es.service.ESService;
+import sod.eastonone.music.service.SodSongService;
 
 @RestController
 public class ESRestController {
@@ -19,17 +20,21 @@ public class ESRestController {
     @Autowired
     private ESService esService;
     
+    @Autowired
+    private SodSongService sodSongService;
+    
     @PostMapping("/index/fetchSongsWithShould")
     public ResponseEntity<List<Song>> fetchSongsWithShouldQuery(@RequestBody Song songSearchRequest) throws IOException {
         List<Song> songs = esService.fetchSongsWithShouldQuery(songSearchRequest);
         return ResponseEntity.ok(songs);
     }
     
-    @PostMapping("/index")
-    public ResponseEntity<String> insertRecords(@RequestBody Song song) throws IOException {
-        String status = esService.insertSong(song);
-        return ResponseEntity.ok(status);
-    }
+	@PostMapping("/index")
+	public ResponseEntity<Song> insertRecords(@RequestBody Song song) throws IOException {
+		Song newSong = sodSongService.createSodSong(song.getTitle(), song.getPlaylist(), song.getLink(),
+				song.getBandName(), song.getSongName(), song.getMessage(), song.getUserId());
+		return ResponseEntity.ok(newSong);
+	}
 
 //    @GetMapping("/index/{id}")
 //    public ResponseEntity<Employee> fetchEmployeeById(@PathVariable("id") String id) throws RecordNotFoundException, IOException {
