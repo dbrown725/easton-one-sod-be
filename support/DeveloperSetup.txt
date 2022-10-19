@@ -162,6 +162,7 @@ Set up Elastic search/Kibana
 	Install Node on your machine if it isn't already installed
 	Checkout github repo
 	navigate to project directory
+	Update src/index.tsx, change HttpLink to have your backend app's uri  
 	npm install
 	npm run start 
 	http://localhost:3000/	
