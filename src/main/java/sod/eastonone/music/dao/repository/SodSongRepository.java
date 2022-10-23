@@ -11,6 +11,10 @@ import sod.eastonone.music.dao.entity.SodSong;
 @Repository
 public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
 	
-	@Query(value="SELECT * FROM song",nativeQuery=true)
+	@Query(value="SELECT * FROM song", nativeQuery=true)
 	public List<SodSong> getAllSodSongs();
+	
+	@Query(value="SELECT * FROM song ORDER BY id DESC LIMIT ?1", nativeQuery=true)
+	public List<SodSong> getMostRecentSongs(int count);
+
 }

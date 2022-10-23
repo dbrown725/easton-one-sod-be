@@ -166,7 +166,6 @@ Set up Elastic search/Kibana
 	npm install
 	npm run start 
 	http://localhost:3000/	
-	As of 10/13/2022 not calling backend yet.	
 	
 ****************************************************
 *********** Back End 	      ***********************

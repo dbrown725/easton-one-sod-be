@@ -3,6 +3,7 @@ type Query {
   bullpenSongById(id: ID): Song
   getAllBullpenSongs(count: Int): [Song]
   songBySearchText(searchText: String): [Song]
+  getMostRecentSongs(count: Int): [Song]
 }
 
 type Mutation {

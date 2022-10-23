@@ -77,6 +77,14 @@ public class SodSongService {
 		return sodSongRepository.getAllSodSongs();
 	}
 	
+	public List<Song> getMostRecentSongs(int count) {
+		List<Song> songs = new ArrayList<Song>();
+		for(SodSong sodSong: sodSongRepository.getMostRecentSongs(count)) {
+			songs.add(new Song(sodSong));
+		}
+		return songs;
+	}
+	
     public List<Song> songsBySearchText(String searchText) throws IOException{
     	Song song = new Song();
     	song.setTitle(searchText);

@@ -33,6 +33,19 @@ public class SodSongController {
 		}
         return songs;
     }
+    
+    @QueryMapping
+    public List<Song> getMostRecentSongs(@Argument int count) throws IOException{
+    	List<Song> songs = new ArrayList<Song>();
+    	try {
+			songs = sodSongService.getMostRecentSongs(count);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+        return songs;
+    }
+    
 
 	@MutationMapping
 	public Song insertSodSong(@Argument String title, @Argument String playlist, @Argument String link,
