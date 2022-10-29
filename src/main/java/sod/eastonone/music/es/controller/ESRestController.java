@@ -17,24 +17,24 @@ import sod.eastonone.music.service.SodSongService;
 public class ESRestController {
 
 
-    @Autowired
-    private ESService esService;
+//    @Autowired
+//    private ESService esService;
+//    
+//    @Autowired
+//    private SodSongService sodSongService;
     
-    @Autowired
-    private SodSongService sodSongService;
-    
-    @PostMapping("/index/fetchSongsWithShould")
-    public ResponseEntity<List<Song>> fetchSongsWithShouldQuery(@RequestBody Song songSearchRequest) throws IOException {
-        List<Song> songs = esService.fetchSongsWithShouldQuery(songSearchRequest);
-        return ResponseEntity.ok(songs);
-    }
-    
-	@PostMapping("/index")
-	public ResponseEntity<Song> createSong(@RequestBody Song song) throws IOException {
-		Song newSong = sodSongService.createSodSong(song.getTitle(), song.getPlaylist(), song.getLink(),
-				song.getBandName(), song.getSongName(), song.getMessage(), song.getUserId());
-		return ResponseEntity.ok(newSong);
-	}
+//    @PostMapping("/index/fetchSongsWithShould")
+//    public ResponseEntity<List<Song>> fetchSongsWithShouldQuery(@RequestBody Song songSearchRequest) throws IOException {
+//        List<Song> songs = esService.fetchSongsWithShouldQuery(songSearchRequest);
+//        return ResponseEntity.ok(songs);
+//    }
+//    
+//	@PostMapping("/index")
+//	public ResponseEntity<Song> createSong(@RequestBody Song song) throws IOException {
+//		Song newSong = sodSongService.createSodSong(song.getTitle(), song.getPlaylist(), song.getLink(),
+//				song.getBandName(), song.getSongName(), song.getMessage(), song.getUserId());
+//		return ResponseEntity.ok(newSong);
+//	}
 
 //    @GetMapping("/index/{id}")
 //    public ResponseEntity<Employee> fetchEmployeeById(@PathVariable("id") String id) throws RecordNotFoundException, IOException {
