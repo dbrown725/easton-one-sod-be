@@ -159,11 +159,13 @@ public class Song {
 	public void setModifyTime(LocalDateTime modifyTime) {
 		this.modifyTime = modifyTime;
 	}
+
 	@Override
 	public String toString() {
 		return "Song [id=" + id + ", title=" + title + ", playlist=" + playlist + ", link=" + link + ", score=" + score
 				+ ", titleHighlighted=" + titleHighlighted + ", message=" + message + ", bandName=" + bandName
-				+ ", songName=" + songName + ", sortOrder=" + sortOrder + ", userId=" + userId + "]";
+				+ ", songName=" + songName + ", sortOrder=" + sortOrder + ", userId=" + userId + ", createTime="
+				+ createTime + ", modifyTime=" + modifyTime + "]";
 	}
 	
 }
