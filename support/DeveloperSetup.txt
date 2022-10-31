@@ -27,7 +27,7 @@ Set up Elastic search/Kibana
 		Windows (untested): https://nunogois-dev.medium.com/elasticsearch-kibana-7-10-setup-on-windows-4a7bbbef28ac
 		
 		If ElasticSearch/Kibana machine is different from local development machine
-			Updated /etc/elsaticsearch/elasticsearch.yml
+			Updated /etc/elasticsearch/elasticsearch.yml
 			To allow all local IPs to be accessible
 				network.host:0.0.0.0
 				discovery.type: single-node
