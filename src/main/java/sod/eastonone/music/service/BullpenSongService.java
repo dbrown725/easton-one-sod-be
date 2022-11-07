@@ -24,7 +24,7 @@ public class BullpenSongService {
 
 	@Transactional
 	public BullpenSong createBullpenSong(final String youtubeTitle, final String youtubeUrl,
-			final String actualBandName, final String actualSongName, final String message, final int sortOrder,
+			final String actualBandName, final String actualSongName, final String message,
 			final int userId) {
 		BullpenSong bullpenSong = new BullpenSong();
 		bullpenSong.setYoutubeTitle(youtubeTitle);
@@ -32,7 +32,10 @@ public class BullpenSongService {
 		bullpenSong.setActualBandName(actualBandName);
 		bullpenSong.setActualSongName(actualSongName);
 		bullpenSong.setMessage(message);
-		bullpenSong.setSortOrder(sortOrder);
+		
+		int maxSortOrder = bullpenSongRepository.getMaxSortOrderByUserId(userId);
+		bullpenSong.setSortOrder(maxSortOrder + 10000);
+		
 		Optional<User> user = this.userRepository.findById(userId);
 		bullpenSong.setUser(user.get());
 		return this.bullpenSongRepository.save(bullpenSong);
@@ -41,6 +44,7 @@ public class BullpenSongService {
 	@Transactional
 	public BullpenSong updateBullpenSong(final int id, final String youtubeTitle, final String youtubeUrl,
 			final String actualBandName, final String actualSongName, final String message, final int sortOrder) {
+		
 		Optional<BullpenSong> bullpenSongOpt = bullpenSongRepository.findById(id);
 		
 		BullpenSong bullpenSong = bullpenSongOpt.get();
@@ -73,7 +77,7 @@ public class BullpenSongService {
 	@Transactional(readOnly = true)
 	public List<BullpenSong> getAllBullpenSongs(final int count) {
 		List<BullpenSong> BullpenSongss = this.bullpenSongRepository.findAll().stream().limit(count)
-				.collect(Collectors.toList());
+				.sorted((a, b) -> Integer.compare(b.getSortOrder(), a.getSortOrder())).collect(Collectors.toList());
 		return BullpenSongss;
 	}
 

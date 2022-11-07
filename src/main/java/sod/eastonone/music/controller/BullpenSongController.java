@@ -48,10 +48,9 @@ public class BullpenSongController {
         @Argument String message,
         @Argument String bandName,
         @Argument String songName,
-        @Argument int sortOrder,
         @Argument int userId) {
 
-      BullpenSong bullpenSong = bullpenSongService.createBullpenSong(title, link, bandName, songName, message, sortOrder, userId);
+      BullpenSong bullpenSong = bullpenSongService.createBullpenSong(title, link, bandName, songName, message, userId);
       return new Song(bullpenSong);
     }
     

@@ -7,7 +7,7 @@ type Query {
 }
 
 type Mutation {
-   addBullpenSong(title: String!, link: String!, message: String!, bandName: String!, songName: String!, sortOrder: Int!, userId: ID!):Song     
+   addBullpenSong(title: String!, link: String!, message: String!, bandName: String!, songName: String!, userId: ID!):Song     
    updateBullpenSong(id: ID!, title: String, link: String, message: String, bandName: String, songName: String, sortOrder: Int):Song 
    deleteBullpenSong(id: ID!): Boolean
    
