@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>sod.eastonone</groupId>
-	<artifactId>elasticsearch</artifactId>
+	<artifactId>music</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>EastonOneElasticSearch</name>
 	<description>Demo project for Spring Boot</description>
@@ -17,12 +17,6 @@
 		<java.version>1.8</java.version>
 	</properties>
 	<dependencies>
-		<!-- 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
-		</dependency>
-		-->
 		<dependency>
 	      <groupId>co.elastic.clients</groupId>
 	      <artifactId>elasticsearch-java</artifactId>

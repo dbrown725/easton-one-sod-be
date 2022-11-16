@@ -1,0 +1,178 @@
+
+****************************************************		
+Project Mgmt Kanban and backlog
+****************************************************		
+	https://easton-one-code-monkeys.monday.com/
+	
+****************************************************		
+Set up MySql
+****************************************************
+
+	Install MySql and MySql Workbench
+		https://www.simplilearn.com/tutorials/mysql-tutorial/mysql-workbench-installation
+	
+	Tables
+		Once you have installed MySQL and have a schema to work with do the following.
+			- from the back end's workspace ../support directory
+				create tables using tableCreation.sql
+				Import into the user table using userTableData.csv
+				Import into the song table the latest csv. Not checked in, see another developer for a copy.
+
+****************************************************		
+Set up Elastic search/Kibana
+****************************************************
+
+	Install both locally	
+		Ubuntu specific instructions: https://phoenixnap.com/kb/how-to-install-elk-stack-on-ubuntu
+		Windows (untested): https://nunogois-dev.medium.com/elasticsearch-kibana-7-10-setup-on-windows-4a7bbbef28ac
+		
+		If ElasticSearch/Kibana machine is different from local development machine
+			Updated /etc/elasticsearch/elasticsearch.yml
+			To allow all local IPs to be accessible
+				network.host:0.0.0.0
+				discovery.type: single-node
+				
+			Updated /etc/kibana/kibana.yml
+			To allow external access
+				server.host: "0.0.0.0"	
+	
+	Start both
+		Ubuntu specific	
+			sudo systemctl start elasticsearch.service	
+			sudo systemctl start kibana
+			
+	Open Kibana - 		
+		http://localhost:5601	
+		If you get a not found wait a few minutes and refresh browser
+
+	Install data (assumes data has been loaded already into MySQL "song" table)
+		In MySQL workbench
+			Right click song table
+			Select "Table Data Export Wizard"
+			Leave column defaults and click Next
+			Select "CSV" and enter a path to where the ".../songExport.csv" should go
+			Make sure "Field Separator" is set to comma
+			Click Next
+			Click Next
+			If no errors Click Next
+			Finish
+			Inspect generated file
+			
+	Back to Kibana http://localhost:5601		
+		Left Nav -> Analytics -> Dashboard
+		Should be a link to "Install some sample data". First time in the screen might be a little different.
+		Click the "Upload File" tab
+		Click "Select or drag and drop a file"
+		Select the previously "song" table exported csv file (for example songExport.csv)
+		Analysis of the first 1000 rows is displayed.
+		Bottom left hand corner of screen Click the Import" button
+		Click the "Advanced" tab
+			Enter Index Name: "song_of_the_day"
+			Remove all references to create_time and modify_time from "Mappings" and "Ingest pipeline"
+			In the "Ingest pipeline" section add the following to the bottom of the "processors" array
+				{
+				  "set": {
+				    "field": "_id",
+				    "value": "{{id}}"
+				  }
+				}
+		Click Import		
+		I got the below error but the generated index seems ok. Might be related to the fact that I previously had a song_of_the_day index or there could be some issue with the imported data. In step 5 "Creating index pattern"
+			Error creating index pattern
+			{"name":"DuplicateDataViewError"}
+	
+	Test
+		Left nav -> Analytics -> Discover
+			Make sure the "song_of_the_day" index is selected in the upper left hand corner grey drop down.
+			You should be able to see a bunch of records in right hand pane. Mine has dispalys "5239" hits
+			Enter a phrase like "Rolling" in the Search bar and hit your key board Enter key.
+			Results and hit count should change. Words that match will be highlighted in yellow.
+			
+		Left nav -> Management -> Dev Tools	
+			You can submit queries like the below. Useful for when figuring out what needs to go ina java written query.
+				GET /song_of_the_day/_doc/_search
+				{
+				  "query" : {
+				    "match_phrase" : {
+				      "youtube_title" : "Ludella Black"
+				    }
+				  }
+				}
+
+				GET /song_of_the_day/_doc/_search
+				{
+				  "query": {
+				    "bool": {
+				      "must": [
+					{
+					  "match": {
+					    "youtube_title": {
+					      "query": "Stones",
+					      "boost": 3
+					    }
+					  }
+					},
+					{
+					  "match": {
+					    "youtube_title": "Rolling"
+					  }
+					}
+				      ]
+				    }
+				  },
+				  "highlight": {
+				    "fields": {
+				      "YouTube Title": {}
+				    }
+				  }
+				} 
+	Complete!
+		Update your backend application.properties "es.hostname" property to "localhost" or an ip address if your backend and elastic search are on separate boxes 		
+	
+	DEV tools for later index management
+		Left nav -> Management -> Dev Tools
+		In Left pane
+			Create index
+				PUT /song_of_the_day
+			Get index info
+				GET /song_of_the_day
+			Delete an index
+				DELETE /song_of_the_day
+			Delete a document by id
+				DELETE /song_of_the_day/_doc/156
+		
+		
+****************************************************
+*********** Local tech Stack ***********************
+****************************************************
+	Ubuntu 20.04.4 LTS (can be anything, windows, linux, etc....)
+	NPM 8.18.0 (any newer version is probably good)
+	Node 18.8.0 (any newer version is probably good)
+	Java openjdk version "1.8.0_342 (any version of Java 8 probably ok)
+	Elastic Search 7.17.5
+	Maven
+	Kibana 7.17.5
+	Ionic React
+	Spring-boot
+	JPA		
+
+****************************************************
+*********** Front End 	      ***********************
+****************************************************
+	Install Node on your machine if it isn't already installed
+	Checkout github repo
+	navigate to project directory
+	Update src/index.tsx, change HttpLink to have your backend app's uri  
+	npm install
+	npm run start 
+	http://localhost:3000/	
+	
+****************************************************
+*********** Back End 	      ***********************
+****************************************************
+	Checkout github repo
+	Update application properties to point to your Mysql and Elastic Search installs
+	Update LocalCorsConfiguration.java with your local IP address
+	Run a Maven package build
+	From a terminal run run_be.sh to start up the app. If on Windows you should create a .bat file
+	Use the graphiql web app to run some tests. See ../support/graphiql_test_cases.txt for testing Instructions and test cases.		
