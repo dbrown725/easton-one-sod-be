@@ -47,16 +47,27 @@ Set up Elastic search/Kibana
 
 	Install data (assumes data has been loaded already into MySQL "song" table)
 		In MySQL workbench
-			Right click song table
-			Select "Table Data Export Wizard"
-			Leave column defaults and click Next
-			Select "CSV" and enter a path to where the ".../songExport.csv" should go
-			Make sure "Field Separator" is set to comma
-			Click Next
-			Click Next
-			If no errors Click Next
-			Finish
-			Inspect generated file
+		
+			Old Method
+				Right click song table
+				Select "Table Data Export Wizard"
+				Leave column defaults and click Next
+				Select "CSV" and enter a path to where the ".../songExport.csv" should go
+				Make sure "Field Separator" is set to comma
+				Click Next
+				Click Next
+				If no errors Click Next
+				Finish
+				Inspect generated file
+				
+			New Method (includes first_name and last_name from the user table)
+				Run the below query
+				select song.id, actual_band_name, actual_song_name, youtube_title, youtube_url, youtube_playlist, user_id, 
+				    user.first_name, user.last_name from song join user on song.user_id = user.id; 	
+				In the below "Result Grid" click on Export icon 
+				Enter the name "songExport"
+				Make sure the bottom left hand corner input "Format" is set to CSV.
+				Click Save   
 			
 	Back to Kibana http://localhost:5601		
 		Left Nav -> Analytics -> Dashboard
