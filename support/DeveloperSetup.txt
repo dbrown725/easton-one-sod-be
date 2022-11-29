@@ -61,13 +61,28 @@ Set up Elastic search/Kibana
 				Inspect generated file
 				
 			New Method (includes first_name and last_name from the user table)
-				Run the below query
-				select song.id, actual_band_name, actual_song_name, youtube_title, youtube_url, youtube_playlist, user_id, 
-				    user.first_name, user.last_name from song join user on song.user_id = user.id; 	
-				In the below "Result Grid" click on Export icon 
-				Enter the name "songExport"
-				Make sure the bottom left hand corner input "Format" is set to CSV.
-				Click Save   
+				Run the below queries one by one and export each resultset to a separate file. To export: "Result Grid" click on Export icon.
+					Make sure the bottom left hand corner input "Format" is set to CSV.
+					
+						select song.id, actual_band_name, actual_song_name, youtube_title, youtube_url, youtube_playlist, user_id, 
+								user.first_name as user_first_name, user.last_name as user_last_name, user.avatar_color as user_avatar_color 
+								from eastonOneSOD.song join eastonOneSOD.user on song.user_id = user.id 
+						        where song.id <= 2000
+						        order by song.id asc;
+						        
+						select song.id, actual_band_name, actual_song_name, youtube_title, youtube_url, youtube_playlist, user_id, 
+								user.first_name as user_first_name, user.last_name as user_last_name, user.avatar_color as user_avatar_color 
+								from eastonOneSOD.song join eastonOneSOD.user on song.user_id = user.id 
+						        where song.id > 2000 and song.id <= 4000
+						        order by song.id asc;
+						        
+						select song.id, actual_band_name, actual_song_name, youtube_title, youtube_url, youtube_playlist, user_id, 
+								user.first_name as user_first_name, user.last_name as user_last_name, user.avatar_color as user_avatar_color 
+								from eastonOneSOD.song join eastonOneSOD.user on song.user_id = user.id 
+						        where song.id > 4000 and song.id <= 6000
+						        order by song.id asc;	
+
+				Concatenate the rows from the three csv files into one csv file (for example songExport.csv) which will be used later to load ElasticSearch.
 			
 	Back to Kibana http://localhost:5601		
 		Left Nav -> Analytics -> Dashboard
@@ -186,4 +201,9 @@ Set up Elastic search/Kibana
 	Update LocalCorsConfiguration.java with your local IP address
 	Run a Maven package build
 	From a terminal run run_be.sh to start up the app. If on Windows you should create a .bat file
-	Use the graphiql web app to run some tests. See ../support/graphiql_test_cases.txt for testing Instructions and test cases.		
+	Use the graphiql web app to run some tests. See ../support/graphiql_test_cases.txt for testing Instructions and test cases.	
+
+****************************************************
+*********** Random Notes     ***********************
+****************************************************	
+avatar color starting point: https://codepen.io/peterbartha/pen/BKxGPK		

@@ -54,18 +54,14 @@ public class User implements Serializable {
     @Column(name = "password", nullable = false)
     private String password;
     
+    @Column(name = "avatar_color", nullable = false)
+    private String avatarColor;
+    
     @Column(name = "create_time")
     private LocalDateTime createTime;
     
     @Column(name = "modify_time")
     private LocalDateTime modifyTime;
-
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", screenName=" + screenName
-				+ ", email=" + email + ", password=" + password + ", createTime=" + createTime + ", modifyTime="
-				+ modifyTime + "]";
-	}
 
 	@PrePersist
     protected void onCreate() {
@@ -155,6 +151,21 @@ public class User implements Serializable {
 
 	public void setModifyTime(LocalDateTime modifyTime) {
 		this.modifyTime = modifyTime;
+	}
+
+	public String getAvatarColor() {
+		return avatarColor;
+	}
+
+	public void setAvatarColor(String avatarColor) {
+		this.avatarColor = avatarColor;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", screenName=" + screenName
+				+ ", email=" + email + ", password=" + password + ", avatarColor=" + avatarColor + ", createTime="
+				+ createTime + ", modifyTime=" + modifyTime + "]";
 	}
 
 }

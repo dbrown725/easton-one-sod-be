@@ -39,6 +39,9 @@ type Song {
   message: String
   sortOrder: Int
   userId: Int
+  userFirstName: String
+  userLastName: String
+  userAvatarColor: String
   createTime: String
   modifyTime: String
 }

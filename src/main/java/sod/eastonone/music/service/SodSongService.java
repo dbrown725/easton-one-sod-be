@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.graphql.data.method.annotation.Argument;
-import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,11 +39,13 @@ public class SodSongService {
 		
 		try {
 			//Insert DB
-			sodSong.setYoutubeTitle(title);
+			//Replace double quotes with single quotes first
+			sodSong.setYoutubeTitle(title.replace("\"", "'"));
+			sodSong.setActualBandName(bandName.replace("\"", "'"));
+			sodSong.setActualSongName(songName.replace("\"", "'"));
+			
 			sodSong.setYoutubePlaylist(playlist);
 			sodSong.setYoutubeUrl(link);
-			sodSong.setActualBandName(bandName);
-			sodSong.setActualSongName(songName);
 			sodSong.setUser(userRepository.findById(userId).get());
 			sodSongSaved = sodSongRepository.save(sodSong);
 		} catch (Exception e) {

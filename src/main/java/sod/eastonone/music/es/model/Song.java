@@ -47,6 +47,15 @@ public class Song {
 	@JsonProperty("user_id")
 	private int userId;
 	
+	@JsonProperty("user_first_name")
+	private String userFirstName;
+	
+	@JsonProperty("user_last_name")
+	private String userLastName;
+	
+	@JsonProperty("user_avatar_color")
+	private String userAvatarColor;
+	
 	@JsonIgnore
 	private LocalDateTime createTime;
 
@@ -74,6 +83,9 @@ public class Song {
 	    bandName = sodSong.getActualBandName();
 	    songName = sodSong.getActualSongName();
 	    userId = sodSong.getUser().getId();
+	    userFirstName = sodSong.getUser().getFirstName();
+	    userLastName = sodSong.getUser().getLastName();
+	    userAvatarColor = sodSong.getUser().getAvatarColor();
 	    createTime = sodSong.getCreateTime();
 	    modifyTime = sodSong.getModifyTime();
 	}
@@ -147,6 +159,31 @@ public class Song {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
+
+	public String getUserFirstName() {
+		return userFirstName;
+	}
+
+	public void setUserFirstName(String userFirstName) {
+		this.userFirstName = userFirstName;
+	}
+
+	public String getUserLastName() {
+		return userLastName;
+	}
+
+	public void setUserLastName(String userLastName) {
+		this.userLastName = userLastName;
+	}
+
+	public String getUserAvatarColor() {
+		return userAvatarColor;
+	}
+
+	public void setUserAvatarColor(String userAvatarColor) {
+		this.userAvatarColor = userAvatarColor;
+	}
+
 	public LocalDateTime getCreateTime() {
 		return createTime;
 	}
@@ -164,8 +201,9 @@ public class Song {
 	public String toString() {
 		return "Song [id=" + id + ", title=" + title + ", playlist=" + playlist + ", link=" + link + ", score=" + score
 				+ ", titleHighlighted=" + titleHighlighted + ", message=" + message + ", bandName=" + bandName
-				+ ", songName=" + songName + ", sortOrder=" + sortOrder + ", userId=" + userId + ", createTime="
-				+ createTime + ", modifyTime=" + modifyTime + "]";
+				+ ", songName=" + songName + ", sortOrder=" + sortOrder + ", userId=" + userId + ", userFirstName="
+				+ userFirstName + ", userLastName=" + userLastName + ", userAvatarColor=" + userAvatarColor
+				+ ", createTime=" + createTime + ", modifyTime=" + modifyTime + "]";
 	}
 	
 }
