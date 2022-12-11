@@ -88,6 +88,8 @@ public class SodSongService {
     public List<Song> songsBySearchText(String searchText) throws IOException{
     	Song song = new Song();
     	song.setTitle(searchText);
+    	song.setBandName(searchText);
+    	song.setSongName(searchText);
     	
     	List<Song> songs = new ArrayList<Song>();
     	try {

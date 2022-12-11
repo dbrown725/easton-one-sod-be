@@ -31,6 +31,8 @@ type Song {
   id: ID
   title: String
   titleHighlighted: String
+  bandNameHighlighted: String
+  songNameHighlighted: String
   link: String
   playlist: String
   bandName: String

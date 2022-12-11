@@ -5,22 +5,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.query_dsl.MatchQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch.core.IndexRequest;
 import co.elastic.clients.elasticsearch.core.IndexResponse;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.HighlightField;
+import co.elastic.clients.elasticsearch.core.search.HighlighterType;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import sod.eastonone.music.es.model.Song;
-import sod.eastonone.music.es.utils.QueryBuilderUtils;
 
 @Service
 public class ESClientConnector {
@@ -32,44 +31,61 @@ public class ESClientConnector {
     private ElasticsearchClient elasticsearchClient;
     
     public List<Song> fetchSongsWithShouldQuery(Song song) throws IOException {
-    	
-    	String searchField = "youtube_title";
 
-    	HighlightField field = new HighlightField.Builder().build();
+    	HighlightField field = new HighlightField.Builder().type(HighlighterType.Plain).build();
+   
 
-    	//Docs not great, not sure what type does
-    	//HighlightField field = (new HighlightField.Builder()).type(HighlighterType.Plain).build();
+    	Map<String, HighlightField> fields = new HashMap<String, HighlightField>();
+    	fields.put("youtube_title", field);
+    	fields.put("actual_band_name", field);
+    	fields.put("actual_song_name", field);
+
+    	Query onTitle = MatchQuery.of(m -> m
+    		    .field("youtube_title")
+    		    .query(song.getTitle())
+    		)._toQuery();
+
+    	Query onBandName = MatchQuery.of(m -> m
+    		    .field("actual_band_name")
+    		    .query(song.getBandName())
+    		)._toQuery();
+
+    	Query onSongName = MatchQuery.of(m -> m
+    		    .field("actual_song_name")
+    		    .query(song.getSongName())
+    		)._toQuery();
     	
-    	    	
         SearchResponse<Song> songSearchResponse = elasticsearchClient.search(req->
                         req.index(index)
                                 .size(100)
                                 .highlight(h -> h
-                                		.fields(searchField, field) 
+                                		.fields(fields)
                                 		)
-                                .query(q -> q      
-                                        .match(t -> t   
-                                            .field(searchField) 
-                                            .query(song.getTitle())
-                                        )
-                                    ),
-                                
+                                .query(q->
+		                              	q.bool(bool->
+		                              			bool.should(onTitle)
+		                              				.should(onBandName)
+		                              				.should(onSongName))),
                 Song.class);
         
         List<Song> foundSongs = new ArrayList<Song>();
-        
+
         List<Hit<Song>> hits = songSearchResponse.hits().hits();
         for (Hit<Song> hit: hits) {
         	Song foundSong = hit.source();
-        	foundSong.setTitleHighlighted(hit.highlight().get(searchField).get(0));
+        	if(hit.highlight().get("youtube_title") != null) {
+        		foundSong.setTitleHighlighted(hit.highlight().get("youtube_title").get(0));
+        	}
+        	if(hit.highlight().get("actual_band_name") != null) {
+        		foundSong.setBandNameHighlighted(hit.highlight().get("actual_band_name").get(0));
+        	}
+        	if(hit.highlight().get("actual_song_name") != null) {
+           		foundSong.setSongNameHighlighted(hit.highlight().get("actual_song_name").get(0));
+        	}
         	foundSong.setScore(hit.score());
         	foundSongs.add(foundSong);
         }
         return foundSongs;
-
-
-//        return songSearchResponse.hits().hits().stream()
-//                .map(Hit::source).collect(Collectors.toList());
     }
     
     public String insertSong(Song song) throws IOException {
@@ -79,16 +95,6 @@ public class ESClientConnector {
                         .document(song));
         IndexResponse response = elasticsearchClient.index(request);
         return response.result().toString();
-    }
-    
-    private List<Query> prepareSongQueryList(Song song) {
-        Map<String, String> conditionMap = new HashMap<>();
-        conditionMap.put("youtube_title.text", song.getTitle());
-
-        return conditionMap.entrySet().stream()
-                .filter(entry->!ObjectUtils.isEmpty(entry.getValue()))
-                .map(entry->QueryBuilderUtils.termQuery(entry.getKey(), entry.getValue()))
-                .collect(Collectors.toList());
     }
 
 //    public String insertEmployee(Employee employee) throws IOException {

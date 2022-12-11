@@ -33,14 +33,20 @@ public class Song {
 	private String titleHighlighted;
 	
 	@JsonIgnore
+	private String bandNameHighlighted;
+
+	@JsonIgnore
+	private String songNameHighlighted;
+
+	@JsonIgnore
 	private String message;
 	
 	@JsonProperty("actual_band_name")
 	private String bandName;
-	
+
 	@JsonProperty("actual_song_name")
 	private String songName;
-	
+
 	@JsonIgnore
 	private int sortOrder;
 	
@@ -129,6 +135,23 @@ public class Song {
 	public void setTitleHighlighted(String titleHighlighted) {
 		this.titleHighlighted = titleHighlighted;
 	}
+
+	public String getBandNameHighlighted() {
+		return bandNameHighlighted;
+	}
+
+	public void setBandNameHighlighted(String bandNameHighlighted) {
+		this.bandNameHighlighted = bandNameHighlighted;
+	}
+
+	public String getSongNameHighlighted() {
+		return songNameHighlighted;
+	}
+
+	public void setSongNameHighlighted(String songNameHighlighted) {
+		this.songNameHighlighted = songNameHighlighted;
+	}
+
 	public String getMessage() {
 		return message;
 	}
@@ -200,7 +223,8 @@ public class Song {
 	@Override
 	public String toString() {
 		return "Song [id=" + id + ", title=" + title + ", playlist=" + playlist + ", link=" + link + ", score=" + score
-				+ ", titleHighlighted=" + titleHighlighted + ", message=" + message + ", bandName=" + bandName
+				+ ", titleHighlighted=" + titleHighlighted + ", bandNameHighlighted=" + bandNameHighlighted
+				+ ", songNameHighlighted=" + songNameHighlighted + ", message=" + message + ", bandName=" + bandName
 				+ ", songName=" + songName + ", sortOrder=" + sortOrder + ", userId=" + userId + ", userFirstName="
 				+ userFirstName + ", userLastName=" + userLastName + ", userAvatarColor=" + userAvatarColor
 				+ ", createTime=" + createTime + ", modifyTime=" + modifyTime + "]";
