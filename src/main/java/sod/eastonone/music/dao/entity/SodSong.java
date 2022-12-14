@@ -63,8 +63,6 @@ public class SodSong implements Serializable {
     @JoinColumn(name = "user_id")
     private User user;
 	
-
-
 	@Column(name = "create_time")
 	private LocalDateTime createTime;
 

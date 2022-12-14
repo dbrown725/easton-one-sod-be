@@ -16,6 +16,8 @@ import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch.core.IndexRequest;
 import co.elastic.clients.elasticsearch.core.IndexResponse;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.UpdateRequest;
+import co.elastic.clients.elasticsearch.core.UpdateResponse;
 import co.elastic.clients.elasticsearch.core.search.HighlightField;
 import co.elastic.clients.elasticsearch.core.search.HighlighterType;
 import co.elastic.clients.elasticsearch.core.search.Hit;
@@ -96,6 +98,18 @@ public class ESClientConnector {
         IndexResponse response = elasticsearchClient.index(request);
         return response.result().toString();
     }
+
+	public String updateSong(Song song) throws IOException {
+
+		UpdateRequest<Song, Song> updateRequest = UpdateRequest
+													.of(req -> req
+															.index(index)
+															.id(String.valueOf(song.getId()))
+															.doc(song));
+
+		UpdateResponse<Song> response = elasticsearchClient.update(updateRequest, Song.class);
+		return response.result().toString();
+	}
 
 //    public String insertEmployee(Employee employee) throws IOException {
 //        IndexRequest<Employee> request = IndexRequest.of(i->

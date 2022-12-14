@@ -4,14 +4,16 @@ type Query {
   getAllBullpenSongs(count: Int): [Song]
   songBySearchText(searchText: String): [Song]
   getMostRecentSongs(count: Int): [Song]
+  getSongsWithIssues(count: Int): [Song]
 }
 
 type Mutation {
    addBullpenSong(title: String!, link: String!, message: String!, bandName: String!, songName: String!, userId: ID!):Song     
-   updateBullpenSong(id: ID!, title: String, link: String, message: String, bandName: String, songName: String, sortOrder: Int):Song 
+   updateBullpenSong(id: ID!, title: String, link: String, message: String, bandName: String, songName: String, sortOrder: Int):Song
    deleteBullpenSong(id: ID!): Boolean
    
-   insertSodSong(title: String!, playlist: String!, link: String!, bandName: String!, songName: String!, message: String!, userId: ID!):Song  
+   insertSodSong(title: String!, playlist: String!, link: String!, bandName: String!, songName: String!, message: String!, userId: ID!):Song
+   updateSodSong(id: ID!, title: String!, playlist: String!, link: String!, bandName: String!, songName: String!, userId: ID!):Song
 }
 
 type Book {
