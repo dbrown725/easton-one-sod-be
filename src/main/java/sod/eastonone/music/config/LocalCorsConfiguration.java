@@ -20,7 +20,7 @@ public class LocalCorsConfiguration {
     final CorsConfiguration config = new CorsConfiguration();
     config.setAllowCredentials(true);
     //config.addAllowedOrigin("http://localhost:3000");
-    config.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://10.0.0.101:3000"));
+    config.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://10.0.0.101:3000", "http://localhost:8000", "http://10.0.0.101:8000"));
     config.addAllowedHeader("*");
     config.addAllowedMethod("*");
     source.registerCorsConfiguration("/graphql/**", config);
