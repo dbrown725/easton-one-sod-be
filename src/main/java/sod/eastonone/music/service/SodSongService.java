@@ -127,6 +127,10 @@ public class SodSongService {
 		return sodSongRepository.getAllSodSongs();
 	}
 	
+	public int getAllSodSongsWithIssuesCount() {
+		return sodSongRepository.getAllSodSongsWithIssuesCount();
+	}
+
 	public List<Song> getAllSodSongsWithIssues(int count) {
 		List<Song> songs = new ArrayList<Song>();
 		for(SodSong sodSong: sodSongRepository.getAllSodSongsWithIssues(count)) {
@@ -134,7 +138,7 @@ public class SodSongService {
 		}
 		return songs;
 	}
-	
+
 	public List<Song> getMostRecentSongs(int count) {
 		List<Song> songs = new ArrayList<Song>();
 		for(SodSong sodSong: sodSongRepository.getMostRecentSongs(count)) {
@@ -142,7 +146,7 @@ public class SodSongService {
 		}
 		return songs;
 	}
-	
+
     public List<Song> songsBySearchText(String searchText) throws IOException{
     	Song song = new Song();
     	song.setTitle(searchText);

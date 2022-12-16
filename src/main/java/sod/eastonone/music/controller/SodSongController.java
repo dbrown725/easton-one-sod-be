@@ -47,6 +47,18 @@ public class SodSongController {
     }
 
     @QueryMapping
+    public int getSongsWithIssuesCount() throws IOException{
+    	int count = 0;
+    	try {
+    		count = sodSongService.getAllSodSongsWithIssuesCount();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+        return count;
+    }
+
+    @QueryMapping
     public List<Song> getSongsWithIssues(@Argument int count) throws IOException{
     	List<Song> songs = new ArrayList<Song>();
     	try {

@@ -4,6 +4,7 @@ type Query {
   getAllBullpenSongs(count: Int): [Song]
   songBySearchText(searchText: String): [Song]
   getMostRecentSongs(count: Int): [Song]
+  getSongsWithIssuesCount: Int
   getSongsWithIssues(count: Int): [Song]
 }
 
