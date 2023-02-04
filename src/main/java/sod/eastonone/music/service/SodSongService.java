@@ -1,6 +1,7 @@
 package sod.eastonone.music.service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -77,20 +78,30 @@ public class SodSongService {
 			populateAndCleanFields(title, playlist, link, bandName, songName, userId, updatedSongData);
 
 			Optional<SodSong> current = sodSongRepository.findById(id);
+			boolean dataUpdated = false;
 			if(!current.get().getYoutubeTitle().equals(updatedSongData.getYoutubeTitle())) {
 				sodSongRepository.updateTitleById(updatedSongData.getYoutubeTitle(), String.valueOf(id));
+				dataUpdated = true;
 			}
 			if(!current.get().getActualBandName().equals(updatedSongData.getActualBandName())) {
 				sodSongRepository.updateBandNameById(updatedSongData.getActualBandName(), String.valueOf(id));
+				dataUpdated = true;
 			}
 			if(!current.get().getActualSongName().equals(updatedSongData.getActualSongName())) {
 				sodSongRepository.updateSongNameById(updatedSongData.getActualSongName(), String.valueOf(id));
+				dataUpdated = true;
 			}
 			if(!current.get().getYoutubeUrl().equals(updatedSongData.getYoutubeUrl())) {
 				sodSongRepository.updateUrlById(updatedSongData.getYoutubeUrl(), String.valueOf(id));
+				dataUpdated = true;
 			}
 			if(current.get().getUser().getId() != updatedSongData.getUser().getId()) {
 				sodSongRepository.updateUserById(updatedSongData.getUser().getId(), String.valueOf(id));
+				dataUpdated = true;
+			}
+			if(dataUpdated) {
+				updatedSongData.setModifyTime(LocalDateTime.now());
+				sodSongRepository.updateModifyTimeById(updatedSongData.getModifyTime(), String.valueOf(id));
 			}
 
 			sodSongSaved = updatedSongData;

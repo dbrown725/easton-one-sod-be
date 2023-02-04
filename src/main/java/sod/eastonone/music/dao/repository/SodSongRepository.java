@@ -1,5 +1,6 @@
 package sod.eastonone.music.dao.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,10 +13,10 @@ import sod.eastonone.music.dao.entity.SodSong;
 
 @Repository
 public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
-	
+
 	@Query(value="SELECT * FROM song", nativeQuery=true)
 	public List<SodSong> getAllSodSongs();
-	
+
 	@Query(value="SELECT * FROM song ORDER BY id DESC LIMIT ?1", nativeQuery=true)
 	public List<SodSong> getMostRecentSongs(int count);
 
@@ -38,11 +39,16 @@ public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
 	@Modifying
 	@Query(value = "UPDATE song s set youtube_url =?1 where s.id = ?2", nativeQuery = true)
 	void updateUrlById(String url, String id);
-	
+
 	@Transactional
 	@Modifying
 	@Query(value = "UPDATE song s set user_id =?1 where s.id = ?2", nativeQuery = true)
 	void updateUserById(int userId, String id);
+
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE song s set modify_time =?1 where s.id = ?2", nativeQuery = true)
+	void updateModifyTimeById(LocalDateTime modifyTime, String id);
 
 	String songsWithIssuesQuery = "select * from song where youtube_url = ''\n"
 			+ "	   union \n"
