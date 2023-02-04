@@ -89,6 +89,9 @@ public class SodSongService {
 			if(!current.get().getYoutubeUrl().equals(updatedSongData.getYoutubeUrl())) {
 				sodSongRepository.updateUrlById(updatedSongData.getYoutubeUrl(), String.valueOf(id));
 			}
+			if(current.get().getUser().getId() != updatedSongData.getUser().getId()) {
+				sodSongRepository.updateUserById(updatedSongData.getUser().getId(), String.valueOf(id));
+			}
 
 			sodSongSaved = updatedSongData;
 		} catch (Exception e) {

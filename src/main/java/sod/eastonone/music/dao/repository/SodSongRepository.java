@@ -38,6 +38,11 @@ public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
 	@Modifying
 	@Query(value = "UPDATE song s set youtube_url =?1 where s.id = ?2", nativeQuery = true)
 	void updateUrlById(String url, String id);
+	
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE song s set user_id =?1 where s.id = ?2", nativeQuery = true)
+	void updateUserById(int userId, String id);
 
 	String songsWithIssuesQuery = "select * from song where youtube_url = ''\n"
 			+ "	   union \n"
@@ -47,9 +52,9 @@ public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
 			+ "    union\n"
 			+ "    select * from song where actual_song_name = ''\n"
 			+ "    union\n"
-			+ "    select * from song where actual_band_name like '???%'\n"
+			+ "    select * from song where actual_band_name like 'UNVERIFIED%'\n"
 			+ "    union\n"
-			+ "    select * from song where actual_song_name like '???%'\n"
+			+ "    select * from song where actual_song_name like 'UNVERIFIED%'\n"
 			+ "    order by id desc LIMIT ?1";
 
 	@Query(value=songsWithIssuesQuery, nativeQuery=true)
@@ -65,9 +70,9 @@ public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
 			+ "    union\n"
 			+ "    select * from eastonOneSOD.song where actual_song_name = ''\n"
 			+ "    union\n"
-			+ "    select * from eastonOneSOD.song where actual_band_name like '???%'\n"
+			+ "    select * from eastonOneSOD.song where actual_band_name like 'UNVERIFIED%'\n"
 			+ "    union\n"
-			+ "    select * from eastonOneSOD.song where actual_song_name like '???%'\n"
+			+ "    select * from eastonOneSOD.song where actual_song_name like 'UNVERIFIED%'\n"
 			+ "	) x";
 
 	@Query(value=songsWithIssuesCountQuery, nativeQuery=true)
