@@ -1,7 +1,8 @@
 package sod.eastonone.music.config;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,11 +20,14 @@ public class LocalCorsConfiguration {
     final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     final CorsConfiguration config = new CorsConfiguration();
     config.setAllowCredentials(true);
-    //config.addAllowedOrigin("http://localhost:3000");
     config.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://10.0.0.101:3000", "http://localhost:8000", "http://10.0.0.101:8000"));
     config.addAllowedHeader("*");
     config.addAllowedMethod("*");
-    source.registerCorsConfiguration("/graphql/**", config);
+
+    Map<String, CorsConfiguration> corsConfigurationMap = new HashMap<String, CorsConfiguration> ();
+    corsConfigurationMap.put("/graphql/**", config);
+    corsConfigurationMap.put("/api/**", config);
+    source.setCorsConfigurations(corsConfigurationMap);
     return new CorsFilter(source);
   }
 }

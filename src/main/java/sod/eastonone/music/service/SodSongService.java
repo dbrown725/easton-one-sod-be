@@ -1,5 +1,6 @@
 package sod.eastonone.music.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import sod.eastonone.music.dao.repository.SodSongRepository;
 import sod.eastonone.music.dao.repository.UserRepository;
 import sod.eastonone.music.es.model.Song;
 import sod.eastonone.music.es.service.ESService;
+import sod.eastonone.music.service.helpers.CSVHelper;
 
 @Service
 public class SodSongService {
@@ -137,8 +139,12 @@ public class SodSongService {
 		updatedSongData.setUser(userRepository.findById(userId).get());
 	}
 	
-	public List<SodSong> getAllSodSongs() {
-		return sodSongRepository.getAllSodSongs();
+	public ByteArrayInputStream loadAllSongs() {
+		List<Song> songs = new ArrayList<Song>();
+		for(SodSong sodSong: sodSongRepository.getAllSodSongs()) {
+			songs.add(new Song(sodSong));
+		}
+		return CSVHelper.songsToCSV(songs);
 	}
 	
 	public int getAllSodSongsWithIssuesCount() {
