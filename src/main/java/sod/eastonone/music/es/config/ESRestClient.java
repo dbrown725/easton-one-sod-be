@@ -11,12 +11,14 @@ import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.ElasticsearchTransport;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
+import lombok.Getter;
+import lombok.Setter;
 
 
 @Configuration
 @ConfigurationProperties("es")
-//@Getter 
-//@Setter //not working, was working then suddenly hostName and port were null
+@Getter
+@Setter
 public class ESRestClient {
 
     private String hostName;
