@@ -174,7 +174,7 @@ Set up Elastic search/Kibana
 	Ubuntu 20.04.4 LTS (can be anything, windows, linux, etc....)
 	NPM 8.18.0 (any newer version is probably good)
 	Node 18.8.0 (any newer version is probably good)
-	Java openjdk version "1.8.0_342 (any version of Java 8 probably ok)
+	Java OpenJDK 64-Bit Server VM (build 11.0.17+8-post-Ubuntu-1ubuntu220.04, mixed mode, sharing) (any Java 11 will work probably)
 	Elastic Search 7.17.5
 	Maven
 	Kibana 7.17.5
