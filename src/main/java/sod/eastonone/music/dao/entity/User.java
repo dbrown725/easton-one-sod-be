@@ -16,8 +16,10 @@ import javax.persistence.Table;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @EqualsAndHashCode
 @Entity
 @Table(name="user")
@@ -28,10 +30,6 @@ public class User implements Serializable {
     //Needed for deserializing other classes that have User as a FK field
     public User(String strId) {
     	id = Integer.parseInt(strId);
-    }
-    
-    public User() {
-    	super();
     }
 
     @Id
@@ -73,10 +71,6 @@ public class User implements Serializable {
                 .atZone( ZoneId.systemDefault() )
                 .toLocalDateTime();
     }
-	
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
 
     private transient  String formattedCreateTime;
 
@@ -84,88 +78,4 @@ public class User implements Serializable {
     public String getFormattedCreateTime() {
         return getCreateTime().toString();
     }
-
-	public void setFormattedCreateTime(String formattedCreateTime) {
-		this.formattedCreateTime = formattedCreateTime;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getScreenName() {
-		return screenName;
-	}
-
-	public void setScreenName(String screenName) {
-		this.screenName = screenName;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public LocalDateTime getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(LocalDateTime createTime) {
-		this.createTime = createTime;
-	}
-
-	public LocalDateTime getModifyTime() {
-		return modifyTime;
-	}
-
-	public void setModifyTime(LocalDateTime modifyTime) {
-		this.modifyTime = modifyTime;
-	}
-
-	public String getAvatarColor() {
-		return avatarColor;
-	}
-
-	public void setAvatarColor(String avatarColor) {
-		this.avatarColor = avatarColor;
-	}
-
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", screenName=" + screenName
-				+ ", email=" + email + ", password=" + password + ", avatarColor=" + avatarColor + ", createTime="
-				+ createTime + ", modifyTime=" + modifyTime + "]";
-	}
-
 }
