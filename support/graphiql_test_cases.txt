@@ -1,48 +1,107 @@
 ############################################################
 ######### With back end running
 ######### http://localhost:8080/easton/graphiql?path=/easton/graphql
-######### Paste into the left hand pane
+######### Need to install in Chrome Extension "ModHeader - Modify HTTP headers", see directions below
+######### 		https://www.webnots.com/how-to-view-and-edit-http-request-and-response-headers-in-chrome
+######### 		Name: Authorization Value: Bearer <idToken>
+######### 		Note: <idToken> can be retrieved from Postman, see above Postman article.
+######### 				https://alex-wasik.medium.com/using-postman-to-fetch-a-firebase-token-9d151670c05b
+############################################################################################################
+############################################################################################################
+################ WARNING:  Authorization Value: Bearer <idToken> will be sent on every request from Chrome
+################    Delete the values from the ModHeader Chrome extension after completing testing otherwise
+################      your logins to other accounts (like your bank) using this browser will fail.
+############################################################################################################
+############################################################################################################
+######### Paste below into the left hand pane
+#########
 ###########################################################
 
 
 
-mutation {
-  addBullpenSong(
-    bandName: "Blondie"
-    songName: "Hanging On The Telephone"
-    title: "Blondie - Hanging On The Telephone"
-    link: "https://www.youtube.com/watch?v=uWhkbDMISl8"
-    message: "This a testttttttttttttttttt"
-    sortOrder: 1
-    userId: 1
-  	) {
-    id
-  	bandName
-    songName
-    title
-    link
-    message
-    sortOrder
-    userId
-    createTime
-    modifyTime
-  }
-}
+# mutation {
+#   addBullpenSong(
+#     bandName: "Blondie"
+#     songName: "Hanging On The Telephone"
+#     title: "Blondie - Hanging On The Telephone"
+#     link: "https://www.youtube.com/watch?v=uWhkbDMISl8"
+#     message: "This a testtttttttttttttttttGGGGGGGIIII"
+#     userId: 1
+#   	) {
+#     id
+#   	bandName
+#     songName
+#     title
+#     link
+#     message
+#     sortOrder
+#     userId
+#     createTime
+#     modifyTime
+#   }
+# }
 
 ##### Needs Elastic search Index data loaded first
 # {
-#   songBySearchText(searchText: "beatles") {
+#   songBySearchText(searchText: "smiled") {
 #     id
 #   	bandName
 #     songName
 #     title
 #     titleHighlighted
+#     bandNameHighlighted
+#     songNameHighlighted
 #     link
+#     userId
+#     userFirstName
+#     userLastName
+#     userAvatarColor
 #     playlist
 #     message
 #     score
 #   }
 # }
+
+# {
+#   getMostRecentSongs(count: 20) {
+#     id
+#   	bandName
+#     songName
+#     title
+#     link
+#     message
+#     sortOrder
+#     userId
+#     userFirstName
+#     userLastName
+#     userAvatarColor
+#     createTime
+#     modifyTime
+#   }
+# }
+
+# {
+#   getSongsWithIssuesCount
+# }
+
+{
+  getSongsWithIssues(count: 700) {
+    id
+  	bandName
+    songName
+    title
+    link
+    playlist
+    message
+    sortOrder
+    userId
+    userFirstName
+    userLastName
+    userAvatarColor
+    createTime
+    modifyTime
+  }
+}
 
 
 # {
@@ -77,12 +136,12 @@ mutation {
 
 # mutation {
 #   updateBullpenSong(
-#     id: 13
-#     # bandName: "Blondie"
-#     # songName: "Hanging On The Telephone"
-#     # title: "Blondie - Hanging On The Telephone"
-#     # link: "https://www.youtube.com/watch?v=uWhkbDMISl8"
-#     message: "This a  A A A tesssaaaassst"
+#     id: 16
+#     bandName: "Blondie"
+#     songName: "Hanging On The Telephone"
+#     title: "Blondie - Hanging On The Telephone"
+#     link: "https://www.youtube.com/watch?v=uWhkbDMISl8"
+#     message: "This a  A A A tesssaaaassstGGGGGGfasdfdasdf"
 #     sortOrder: 7
 #   	) {
 #     id
@@ -100,20 +159,42 @@ mutation {
 
 # mutation {
 #   deleteBullpenSong(
-#     id: 6) 
+#     id: 16) 
 # }
 
 
 #### Probably will not run without Elastic Search up
 # mutation {
 #   insertSodSong(
-#     title: "B-52 - LEGAL TENDER 4"
+#     title: "Iggy Pop - Louie Louie",
 #   	playlist: "End of the World (And I Feel Fine)"
-#     link: "https://www.youtube.com/watch?v=qXQpP91SBaA"
-#     bandName: "The B-52's"
-#     songName: "LEGAL TENDER"
-#     message: "This a new sod song message"
+#     link: "https://www.youtube.com/watch?v=ZhSFV_M1Hv8"
+#     bandName: "Iggy Pop"
+#     songName: "Louie Louie"
+#     message: ""
 #     userId: 1
+#   	) {
+#     id
+#     title
+#     link
+#   	bandName
+#     songName
+#     message
+#     userId
+#     createTime
+#     modifyTime
+#   }
+# }
+
+# mutation {
+#   updateSodSong(
+#     id: 5373
+#     title: "'I Love This Song' by Flowerovlove",
+#   	playlist: "End of the World (And I Feel Fine)"
+#     link: "https://www.youtube.com/watch?v=aVEIB5A1DV8"
+#     bandName: "Flowerovlove",
+#     songName: "I Love This Song",
+#     userId: 7
 #   	) {
 #     id
 #     title
@@ -236,4 +317,3 @@ mutation {
 #     }
 #   }
 # }
-

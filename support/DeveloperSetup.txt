@@ -167,7 +167,6 @@ Set up Elastic search/Kibana
 			Delete a document by id
 				DELETE /song_of_the_day/_doc/156
 		
-		
 ****************************************************
 *********** Local tech Stack ***********************
 ****************************************************
@@ -180,7 +179,8 @@ Set up Elastic search/Kibana
 	Kibana 7.17.5
 	Ionic React
 	Spring-boot
-	JPA		
+	JPA
+	Google Firebase for Bearer token based Authentication
 
 ****************************************************
 *********** Front End 	      ***********************
@@ -188,7 +188,8 @@ Set up Elastic search/Kibana
 	Install Node on your machine if it isn't already installed
 	Checkout github repo
 	navigate to project directory
-	Update src/index.tsx, change HttpLink to have your backend app's uri  
+	Update src/index.tsx, change HttpLink to have your backend app's uri
+	Update firebase.js with proper firebaseConfig values you have received from another developer
 	npm install
 	npm run start 
 	http://localhost:3000/	
@@ -197,13 +198,45 @@ Set up Elastic search/Kibana
 *********** Back End 	      ***********************
 ****************************************************
 	Checkout github repo
-	Update application properties to point to your Mysql and Elastic Search installs
-	Update LocalCorsConfiguration.java with your local IP address
+	Update application properties
+		- set spring.datasource.url to point to your Mysql
+		- set es.hostname to point to you Elastic Search install
+		- set security.allowed-origins to your local ip address
+	Update firebase_config.json with proper values you have received from another developer
 	Run a Maven package build
 	From a terminal run run_be.sh to start up the app. If on Windows you should create a .bat file
 	Use the graphiql web app to run some tests. See ../support/graphiql_test_cases.txt for testing Instructions and test cases.	
 
 ****************************************************
+*********** Backend testing with Auth **************
+****************************************************
+	Postman - see below article
+		https://alex-wasik.medium.com/using-postman-to-fetch-a-firebase-token-9d151670c05b
+
+	Graphiql - need to install in Chrome Extension "ModHeader - Modify HTTP headers", see directions below
+		https://www.webnots.com/how-to-view-and-edit-http-request-and-response-headers-in-chrome
+		Name: Authorization Value: Bearer <idToken>
+		Note: <idToken> can be retrieved from Postman, see above Postman article.
+		############################################################################################################
+		############################################################################################################
+		################ WARNING:  Authorization Value: Bearer <idToken> will be sent on every request from Chrome
+		################    Delete the values from the ModHeader Chrome extension after completing testing otherwise
+		################      your logins to other accounts (like your bank) using this browser will fail.
+		############################################################################################################
+		############################################################################################################
+
+****************************************************
 *********** Random Notes     ***********************
 ****************************************************	
-avatar color starting point: https://codepen.io/peterbartha/pen/BKxGPK		
+	avatar color starting point: https://codepen.io/peterbartha/pen/BKxGPK
+
+- Spring boot Firebase
+
+		- https://medium.com/@purikunal22/securing-springboot-api-using-firebase-authentication-16d72dd250cc
+			https://github.com/kunal52/springbootfirebaseauth
+
+		- https://alex-wasik.medium.com/using-postman-to-fetch-a-firebase-token-9d151670c05b
+
+- React Firebase
+		- https://blog.logrocket.com/user-authentication-firebase-react-apps/
+			https://github.com/atharvadeosthale/firebase-auth-article/blob/master/src/Login.js
