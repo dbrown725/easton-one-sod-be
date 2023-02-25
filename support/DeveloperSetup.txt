@@ -202,9 +202,10 @@ Set up Elastic search/Kibana
 		- set spring.datasource.url to point to your Mysql
 		- set es.hostname to point to you Elastic Search install
 		- set security.allowed-origins to your local ip address
+		- set Email related properties with values you have received from another developer
 	Update firebase_config.json with proper values you have received from another developer
 	Run a Maven package build
-	From a terminal run run_be.sh to start up the app. If on Windows you should create a .bat file
+	From a terminal run ./run_be.sh to start up the app. If on Windows you should create a .bat file
 	Use the graphiql web app to run some tests. See ../support/graphiql_test_cases.txt for testing Instructions and test cases.	
 
 ****************************************************

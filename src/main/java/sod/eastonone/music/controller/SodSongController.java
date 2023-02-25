@@ -73,7 +73,7 @@ public class SodSongController {
 	@MutationMapping
 	public Song insertSodSong(@Argument String title, @Argument String playlist, @Argument String link,
 			@Argument String bandName, @Argument String songName, @Argument String message, @Argument int userId)
-			throws IOException {
+			throws Exception {
 
 		return sodSongService.createSodSong(title, playlist, link, bandName, songName, message, userId);
 	}

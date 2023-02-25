@@ -30,10 +30,13 @@ public class SodSongService {
     @Autowired
     private ESService esService;
 
+    @Autowired
+    private EmailService emailService;
+
 	@Transactional
 	public Song createSodSong(final String title, final String playlist, final String link,
 			final String bandName, final String songName, final String message,
-			final int userId) throws IOException {
+			final int userId) throws Exception {
 		
 		SodSong sodSong = new SodSong();
 		SodSong sodSongSaved = null;
@@ -41,6 +44,8 @@ public class SodSongService {
 			// Insert DB
 			populateAndCleanFields(title, playlist, link, bandName, songName, userId, sodSong);
 			sodSongSaved = sodSongRepository.save(sodSong);
+			emailService.sendSODNotification(sodSongSaved, message);
+
 		} catch (Exception e) {
 			// add logging
 			e.printStackTrace();
