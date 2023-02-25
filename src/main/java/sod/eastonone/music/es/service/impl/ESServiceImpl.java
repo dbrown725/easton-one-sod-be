@@ -26,6 +26,11 @@ public class ESServiceImpl implements ESService {
         return esClientConnector.insertSong(song);
     }
 
+    @Override
+    public String updateSong(Song song) throws IOException {
+        return esClientConnector.updateSong(song);
+    }
+
 //    @Override
 //    public Employee fetchEmployeeById(String id) throws RecordNotFoundException, IOException {
 //        return esClientConnector.fetchEmployeeById(id);

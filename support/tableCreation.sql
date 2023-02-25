@@ -7,8 +7,9 @@ CREATE TABLE `user` (
   `password` varchar(100) NOT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `avatar_color` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-)
+ );
 
 
 CREATE TABLE `song` (
@@ -24,7 +25,7 @@ CREATE TABLE `song` (
   PRIMARY KEY (`id`),
   KEY `user_ibfk_1` (`user_id`),
   CONSTRAINT `user_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-)
+);
 
 CREATE TABLE `bullpen_song` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -40,7 +41,7 @@ CREATE TABLE `bullpen_song` (
   PRIMARY KEY (`id`),
   KEY `bullpen_song_ibfk_1` (`user_id`),
   CONSTRAINT `bullpen_song_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-)
+);
 
 
 

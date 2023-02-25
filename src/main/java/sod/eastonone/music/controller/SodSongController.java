@@ -33,7 +33,7 @@ public class SodSongController {
 		}
         return songs;
     }
-    
+
     @QueryMapping
     public List<Song> getMostRecentSongs(@Argument int count) throws IOException{
     	List<Song> songs = new ArrayList<Song>();
@@ -45,14 +45,45 @@ public class SodSongController {
 		}
         return songs;
     }
-    
+
+    @QueryMapping
+    public int getSongsWithIssuesCount() throws IOException{
+    	int count = 0;
+    	try {
+    		count = sodSongService.getAllSodSongsWithIssuesCount();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+        return count;
+    }
+
+    @QueryMapping
+    public List<Song> getSongsWithIssues(@Argument int count) throws IOException{
+    	List<Song> songs = new ArrayList<Song>();
+    	try {
+			songs = sodSongService.getAllSodSongsWithIssues(count);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+        return songs;
+    }
 
 	@MutationMapping
 	public Song insertSodSong(@Argument String title, @Argument String playlist, @Argument String link,
 			@Argument String bandName, @Argument String songName, @Argument String message, @Argument int userId)
-			throws IOException {
+			throws Exception {
 
 		return sodSongService.createSodSong(title, playlist, link, bandName, songName, message, userId);
+	}
+
+	@MutationMapping
+	public Song updateSodSong(@Argument int id, @Argument String title, @Argument String playlist, @Argument String link,
+			@Argument String bandName, @Argument String songName, @Argument String message, @Argument int userId)
+			throws IOException {
+
+		return sodSongService.updateSodSong(id, title, playlist, link, bandName, songName, message, userId);
 	}
 
 }

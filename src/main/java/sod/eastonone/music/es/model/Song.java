@@ -11,7 +11,6 @@ import sod.eastonone.music.dao.entity.BullpenSong;
 import sod.eastonone.music.dao.entity.SodSong;
 
 @Data
-//@NoArgsConstructor //not recognized by Eclipse, had to add a default constructor. Maven build works fine, just Eclipse has the problem.
 @JsonInclude(JsonInclude.Include.NON_NULL) 
 public class Song {
 	
@@ -33,19 +32,34 @@ public class Song {
 	private String titleHighlighted;
 	
 	@JsonIgnore
+	private String bandNameHighlighted;
+
+	@JsonIgnore
+	private String songNameHighlighted;
+
+	@JsonIgnore
 	private String message;
 	
 	@JsonProperty("actual_band_name")
 	private String bandName;
-	
+
 	@JsonProperty("actual_song_name")
 	private String songName;
-	
+
 	@JsonIgnore
 	private int sortOrder;
 	
 	@JsonProperty("user_id")
 	private int userId;
+	
+	@JsonProperty("user_first_name")
+	private String userFirstName;
+	
+	@JsonProperty("user_last_name")
+	private String userLastName;
+	
+	@JsonProperty("user_avatar_color")
+	private String userAvatarColor;
 	
 	@JsonIgnore
 	private LocalDateTime createTime;
@@ -74,98 +88,14 @@ public class Song {
 	    bandName = sodSong.getActualBandName();
 	    songName = sodSong.getActualSongName();
 	    userId = sodSong.getUser().getId();
+	    userFirstName = sodSong.getUser().getFirstName();
+	    userLastName = sodSong.getUser().getLastName();
+	    userAvatarColor = sodSong.getUser().getAvatarColor();
 	    createTime = sodSong.getCreateTime();
 	    modifyTime = sodSong.getModifyTime();
 	}
 
 	public Song() {
-	}
-
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	public String getPlaylist() {
-		return playlist;
-	}
-	public void setPlaylist(String playlist) {
-		this.playlist = playlist;
-	}
-	public String getLink() {
-		return link;
-	}
-	public void setLink(String link) {
-		this.link = link;
-	}
-	public Double getScore() {
-		return score;
-	}
-	public void setScore(Double score) {
-		this.score = score;
-	}
-	public String getTitleHighlighted() {
-		return titleHighlighted;
-	}
-	public void setTitleHighlighted(String titleHighlighted) {
-		this.titleHighlighted = titleHighlighted;
-	}
-	public String getMessage() {
-		return message;
-	}
-	public void setMessage(String message) {
-		this.message = message;
-	}
-	public String getBandName() {
-		return bandName;
-	}
-	public void setBandName(String bandName) {
-		this.bandName = bandName;
-	}
-	public String getSongName() {
-		return songName;
-	}
-	public void setSongName(String songName) {
-		this.songName = songName;
-	}
-	public int getSortOrder() {
-		return sortOrder;
-	}
-	public void setSortOrder(int sortOrder) {
-		this.sortOrder = sortOrder;
-	}
-	public int getUserId() {
-		return userId;
-	}
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
-	public LocalDateTime getCreateTime() {
-		return createTime;
-	}
-	public void setCreateTime(LocalDateTime createTime) {
-		this.createTime = createTime;
-	}
-	public LocalDateTime getModifyTime() {
-		return modifyTime;
-	}
-	public void setModifyTime(LocalDateTime modifyTime) {
-		this.modifyTime = modifyTime;
-	}
-
-	@Override
-	public String toString() {
-		return "Song [id=" + id + ", title=" + title + ", playlist=" + playlist + ", link=" + link + ", score=" + score
-				+ ", titleHighlighted=" + titleHighlighted + ", message=" + message + ", bandName=" + bandName
-				+ ", songName=" + songName + ", sortOrder=" + sortOrder + ", userId=" + userId + ", createTime="
-				+ createTime + ", modifyTime=" + modifyTime + "]";
 	}
 	
 }

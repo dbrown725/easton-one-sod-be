@@ -33,9 +33,16 @@ public class BullpenSongService {
 		bullpenSong.setActualSongName(actualSongName);
 		bullpenSong.setMessage(message);
 		
-		int maxSortOrder = bullpenSongRepository.getMaxSortOrderByUserId(userId);
-		bullpenSong.setSortOrder(maxSortOrder + 10000);
+		int currentSongCount = bullpenSongRepository.getSongCountByUserId(userId);
 		
+		if(currentSongCount == 0) {
+			//First song in the bullpen
+			bullpenSong.setSortOrder(100000);
+		}else {
+			int maxSortOrder = bullpenSongRepository.getMaxSortOrderByUserId(userId);
+			bullpenSong.setSortOrder(maxSortOrder + 10000);
+		}
+
 		Optional<User> user = this.userRepository.findById(userId);
 		bullpenSong.setUser(user.get());
 		return this.bullpenSongRepository.save(bullpenSong);

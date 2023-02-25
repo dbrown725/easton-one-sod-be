@@ -19,10 +19,10 @@ public interface ESService {
 //    public String deleteEmployeeById(Long id) throws IOException;
 //
 //    public String updateEmployee(Employee employee) throws IOException;
-    
-    
+
     public List<Song> fetchSongsWithShouldQuery(Song song) throws IOException;
     
     public String insertSong(Song song) throws IOException;
 
+    public String updateSong(Song song) throws IOException;
 }

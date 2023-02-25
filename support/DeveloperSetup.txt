@@ -47,16 +47,42 @@ Set up Elastic search/Kibana
 
 	Install data (assumes data has been loaded already into MySQL "song" table)
 		In MySQL workbench
-			Right click song table
-			Select "Table Data Export Wizard"
-			Leave column defaults and click Next
-			Select "CSV" and enter a path to where the ".../songExport.csv" should go
-			Make sure "Field Separator" is set to comma
-			Click Next
-			Click Next
-			If no errors Click Next
-			Finish
-			Inspect generated file
+		
+			Old Method
+				Right click song table
+				Select "Table Data Export Wizard"
+				Leave column defaults and click Next
+				Select "CSV" and enter a path to where the ".../songExport.csv" should go
+				Make sure "Field Separator" is set to comma
+				Click Next
+				Click Next
+				If no errors Click Next
+				Finish
+				Inspect generated file
+				
+			New Method (includes first_name and last_name from the user table)
+				Run the below queries one by one and export each resultset to a separate file. To export: "Result Grid" click on Export icon.
+					Make sure the bottom left hand corner input "Format" is set to CSV.
+					
+						select song.id, actual_band_name, actual_song_name, youtube_title, youtube_url, youtube_playlist, user_id, 
+								user.first_name as user_first_name, user.last_name as user_last_name, user.avatar_color as user_avatar_color 
+								from eastonOneSOD.song join eastonOneSOD.user on song.user_id = user.id 
+						        where song.id <= 2000
+						        order by song.id asc;
+						        
+						select song.id, actual_band_name, actual_song_name, youtube_title, youtube_url, youtube_playlist, user_id, 
+								user.first_name as user_first_name, user.last_name as user_last_name, user.avatar_color as user_avatar_color 
+								from eastonOneSOD.song join eastonOneSOD.user on song.user_id = user.id 
+						        where song.id > 2000 and song.id <= 4000
+						        order by song.id asc;
+						        
+						select song.id, actual_band_name, actual_song_name, youtube_title, youtube_url, youtube_playlist, user_id, 
+								user.first_name as user_first_name, user.last_name as user_last_name, user.avatar_color as user_avatar_color 
+								from eastonOneSOD.song join eastonOneSOD.user on song.user_id = user.id 
+						        where song.id > 4000 and song.id <= 6000
+						        order by song.id asc;	
+
+				Concatenate the rows from the three csv files into one csv file (for example songExport.csv) which will be used later to load ElasticSearch.
 			
 	Back to Kibana http://localhost:5601		
 		Left Nav -> Analytics -> Dashboard
@@ -141,20 +167,20 @@ Set up Elastic search/Kibana
 			Delete a document by id
 				DELETE /song_of_the_day/_doc/156
 		
-		
 ****************************************************
 *********** Local tech Stack ***********************
 ****************************************************
 	Ubuntu 20.04.4 LTS (can be anything, windows, linux, etc....)
 	NPM 8.18.0 (any newer version is probably good)
 	Node 18.8.0 (any newer version is probably good)
-	Java openjdk version "1.8.0_342 (any version of Java 8 probably ok)
+	Java OpenJDK 64-Bit Server VM (build 11.0.17+8-post-Ubuntu-1ubuntu220.04, mixed mode, sharing) (any Java 11 will work probably)
 	Elastic Search 7.17.5
 	Maven
 	Kibana 7.17.5
 	Ionic React
 	Spring-boot
-	JPA		
+	JPA
+	Google Firebase for Bearer token based Authentication
 
 ****************************************************
 *********** Front End 	      ***********************
@@ -162,7 +188,8 @@ Set up Elastic search/Kibana
 	Install Node on your machine if it isn't already installed
 	Checkout github repo
 	navigate to project directory
-	Update src/index.tsx, change HttpLink to have your backend app's uri  
+	Update src/index.tsx, change HttpLink to have your backend app's uri
+	Update firebase.js with proper firebaseConfig values you have received from another developer
 	npm install
 	npm run start 
 	http://localhost:3000/	
@@ -171,8 +198,46 @@ Set up Elastic search/Kibana
 *********** Back End 	      ***********************
 ****************************************************
 	Checkout github repo
-	Update application properties to point to your Mysql and Elastic Search installs
-	Update LocalCorsConfiguration.java with your local IP address
+	Update application properties
+		- set spring.datasource.url to point to your Mysql
+		- set es.hostname to point to you Elastic Search install
+		- set security.allowed-origins to your local ip address
+		- set Email related properties with values you have received from another developer
+	Update firebase_config.json with proper values you have received from another developer
 	Run a Maven package build
-	From a terminal run run_be.sh to start up the app. If on Windows you should create a .bat file
-	Use the graphiql web app to run some tests. See ../support/graphiql_test_cases.txt for testing Instructions and test cases.		
+	From a terminal run ./run_be.sh to start up the app. If on Windows you should create a .bat file
+	Use the graphiql web app to run some tests. See ../support/graphiql_test_cases.txt for testing Instructions and test cases.	
+
+****************************************************
+*********** Backend testing with Auth **************
+****************************************************
+	Postman - see below article
+		https://alex-wasik.medium.com/using-postman-to-fetch-a-firebase-token-9d151670c05b
+
+	Graphiql - need to install in Chrome Extension "ModHeader - Modify HTTP headers", see directions below
+		https://www.webnots.com/how-to-view-and-edit-http-request-and-response-headers-in-chrome
+		Name: Authorization Value: Bearer <idToken>
+		Note: <idToken> can be retrieved from Postman, see above Postman article.
+		############################################################################################################
+		############################################################################################################
+		################ WARNING:  Authorization Value: Bearer <idToken> will be sent on every request from Chrome
+		################    Delete the values from the ModHeader Chrome extension after completing testing otherwise
+		################      your logins to other accounts (like your bank) using this browser will fail.
+		############################################################################################################
+		############################################################################################################
+
+****************************************************
+*********** Random Notes     ***********************
+****************************************************	
+	avatar color starting point: https://codepen.io/peterbartha/pen/BKxGPK
+
+- Spring boot Firebase
+
+		- https://medium.com/@purikunal22/securing-springboot-api-using-firebase-authentication-16d72dd250cc
+			https://github.com/kunal52/springbootfirebaseauth
+
+		- https://alex-wasik.medium.com/using-postman-to-fetch-a-firebase-token-9d151670c05b
+
+- React Firebase
+		- https://blog.logrocket.com/user-authentication-firebase-react-apps/
+			https://github.com/atharvadeosthale/firebase-auth-article/blob/master/src/Login.js

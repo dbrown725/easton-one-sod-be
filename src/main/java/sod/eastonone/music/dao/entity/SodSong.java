@@ -63,20 +63,11 @@ public class SodSong implements Serializable {
     @JoinColumn(name = "user_id")
     private User user;
 	
-
-
 	@Column(name = "create_time")
 	private LocalDateTime createTime;
 
 	@Column(name = "modify_time")
 	private LocalDateTime modifyTime;
-
-	@Override
-	public String toString() {
-		return "Song [id=" + id + ", youtubeTitle=" + youtubeTitle + ", youtubeUrl=" + youtubeUrl + ", youtubePlaylist="
-				+ youtubePlaylist + ", actualBandName=" + actualBandName + ", actualSongName=" + actualSongName
-				+ ", user=" + user + ", createTime=" + createTime + ", modifyTime=" + modifyTime + "]";
-	}
 
 	@PrePersist
 	protected void onCreate() {
@@ -90,86 +81,6 @@ public class SodSong implements Serializable {
 	// Getter and setter
 	public String getFormattedCreateTime() {
 		return getCreateTime().toString();
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getYoutubeTitle() {
-		return youtubeTitle;
-	}
-
-	public void setYoutubeTitle(String youtubeTitle) {
-		this.youtubeTitle = youtubeTitle;
-	}
-
-	public String getYoutubeUrl() {
-		return youtubeUrl;
-	}
-
-	public void setYoutubeUrl(String youtubeUrl) {
-		this.youtubeUrl = youtubeUrl;
-	}
-
-	public String getYoutubePlaylist() {
-		return youtubePlaylist;
-	}
-
-	public void setYoutubePlaylist(String youtubePlaylist) {
-		this.youtubePlaylist = youtubePlaylist;
-	}
-
-	public String getActualBandName() {
-		return actualBandName;
-	}
-
-	public void setActualBandName(String actualBandName) {
-		this.actualBandName = actualBandName;
-	}
-
-	public String getActualSongName() {
-		return actualSongName;
-	}
-
-	public void setActualSongName(String actualSongName) {
-		this.actualSongName = actualSongName;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public LocalDateTime getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(LocalDateTime createTime) {
-		this.createTime = createTime;
-	}
-
-	public LocalDateTime getModifyTime() {
-		return modifyTime;
-	}
-
-	public void setModifyTime(LocalDateTime modifyTime) {
-		this.modifyTime = modifyTime;
-	}
-
-	public void setFormattedCreateTime(String formattedCreateTime) {
-		this.formattedCreateTime = formattedCreateTime;
 	}
 
 }
