@@ -37,6 +37,9 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "auth_provider_uid", nullable = false)
+    private String authProviderUid;
+
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
@@ -48,9 +51,6 @@ public class User implements Serializable {
     
     @Column(name = "email", nullable = false)
     private String email;
-    
-    @Column(name = "password", nullable = false)
-    private String password;
     
     @Column(name = "avatar_color", nullable = false)
     private String avatarColor;

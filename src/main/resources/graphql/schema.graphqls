@@ -6,6 +6,7 @@ type Query {
   getMostRecentSongs(count: Int): [Song]
   getSongsWithIssuesCount: Int
   getSongsWithIssues(count: Int): [Song]
+  getUserInfo: User
 }
 
 type Mutation {
@@ -49,5 +50,17 @@ type Song {
   userAvatarColor: String
   createTime: String
   modifyTime: String
+}
+
+type User {
+  id: ID
+  uid: String
+  email: String
+  isEmailVerified: Boolean
+  issuer: String
+  firstName: String
+  lastName: String
+  screenName: String
+  avatarColor: String
 }
 

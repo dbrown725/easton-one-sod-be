@@ -16,7 +16,7 @@ Set up MySql
 			- from the back end's workspace ../support directory
 				create tables using tableCreation.sql
 				Import into the user table using userTableData.csv
-				Import into the song table the latest csv. Not checked in, see another developer for a copy.
+				Import into the song table the latest csv. Not checked in, see another developer for a copy and import directions.
 
 ****************************************************		
 Set up Elastic search/Kibana
