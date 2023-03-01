@@ -23,11 +23,11 @@ public class BullpenSongService {
 	private UserRepository userRepository;
 
 	@Transactional
-	public BullpenSong createBullpenSong(final String youtubeTitle, final String youtubeUrl,
+	public BullpenSong createBullpenSong(final String title, final String youtubeUrl,
 			final String actualBandName, final String actualSongName, final String message,
 			final int userId) {
 		BullpenSong bullpenSong = new BullpenSong();
-		bullpenSong.setYoutubeTitle(youtubeTitle);
+		bullpenSong.setTitle(title);
 		bullpenSong.setYoutubeUrl(youtubeUrl);
 		bullpenSong.setActualBandName(actualBandName);
 		bullpenSong.setActualSongName(actualSongName);
@@ -49,14 +49,14 @@ public class BullpenSongService {
 	}
 	
 	@Transactional
-	public BullpenSong updateBullpenSong(final int id, final String youtubeTitle, final String youtubeUrl,
+	public BullpenSong updateBullpenSong(final int id, final String title, final String youtubeUrl,
 			final String actualBandName, final String actualSongName, final String message, final int sortOrder) {
 		
 		Optional<BullpenSong> bullpenSongOpt = bullpenSongRepository.findById(id);
 		
 		BullpenSong bullpenSong = bullpenSongOpt.get();
-		if (youtubeTitle != null)
-			bullpenSong.setYoutubeTitle(youtubeTitle);
+		if (title != null)
+			bullpenSong.setTitle(title);
 		if (youtubeUrl != null)
 			bullpenSong.setYoutubeUrl(youtubeUrl);
 		if (actualBandName != null)

@@ -22,7 +22,7 @@ public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
 
 	@Transactional
 	@Modifying
-	@Query(value = "UPDATE song s set youtube_title =?1 where s.id = ?2", nativeQuery = true)
+	@Query(value = "UPDATE song s set title =?1 where s.id = ?2", nativeQuery = true)
 	void updateTitleById(String title, String id);
 
 	@Transactional
@@ -52,7 +52,7 @@ public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
 
 	String songsWithIssuesQuery = "select * from song where youtube_url = ''\n"
 			+ "	   union \n"
-			+ "    select * from song where youtube_title = ''\n"
+			+ "    select * from song where title = ''\n"
 			+ "    union\n"
 			+ "    select * from song where actual_band_name = ''\n"
 			+ "    union\n"
@@ -70,7 +70,7 @@ public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
 			+ "	(\n"
 			+ "	select * from eastonOneSOD.song where youtube_url = ''\n"
 			+ "	union \n"
-			+ "    select * from eastonOneSOD.song where youtube_title = ''\n"
+			+ "    select * from eastonOneSOD.song where title = ''\n"
 			+ "    union\n"
 			+ "    select * from eastonOneSOD.song where actual_band_name = ''\n"
 			+ "    union\n"

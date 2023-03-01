@@ -52,7 +52,7 @@ public class EmailService {
 							+ "<div>Submitter: " + sodSong.getUser().getFirstName() + " " + sodSong.getUser().getLastName() + "</div><br/>"
 							+ msgLine
 							+ "<div><a href=\"" + sodSong.getYoutubeUrl() + "\"" + "target=\"_blank\">"
-								+ sodSong.getYoutubeTitle() + "</a></div><br/>"
+								+ sodSong.getTitle() + "</a></div><br/>"
 							+ "<div> Band: " + sodSong.getActualBandName() + "</div><br/>"
 							+ "<div> Song: " + sodSong.getActualSongName() + "</div><br/>"
 							+ "<div> Playlist: <a href=\"" + "https://www.youtube.com/playlist?list=PLPFWSmJg6BGh7X7DGsWLdWO-Qt27460De"

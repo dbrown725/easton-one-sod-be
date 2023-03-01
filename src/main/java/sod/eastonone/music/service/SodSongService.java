@@ -86,8 +86,8 @@ public class SodSongService {
 
 			Optional<SodSong> current = sodSongRepository.findById(id);
 			boolean dataUpdated = false;
-			if(!current.get().getYoutubeTitle().equals(updatedSongData.getYoutubeTitle())) {
-				sodSongRepository.updateTitleById(updatedSongData.getYoutubeTitle(), String.valueOf(id));
+			if(!current.get().getTitle().equals(updatedSongData.getTitle())) {
+				sodSongRepository.updateTitleById(updatedSongData.getTitle(), String.valueOf(id));
 				dataUpdated = true;
 			}
 			if(!current.get().getActualBandName().equals(updatedSongData.getActualBandName())) {
@@ -135,7 +135,7 @@ public class SodSongService {
 	private void populateAndCleanFields(final String title, final String playlist, final String link,
 			final String bandName, final String songName, final int userId, SodSong updatedSongData) {
 		//Replace double quotes with single quotes and commas with blanks
-		updatedSongData.setYoutubeTitle(title.replace("\"", "'").replace(",", ""));
+		updatedSongData.setTitle(title.replace("\"", "'").replace(",", ""));
 		updatedSongData.setActualBandName(bandName.replace("\"", "'").replace(",", ""));
 		updatedSongData.setActualSongName(songName.replace("\"", "'").replace(",", ""));
 

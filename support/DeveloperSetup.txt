@@ -64,19 +64,19 @@ Set up Elastic search/Kibana
 				Run the below queries one by one and export each resultset to a separate file. To export: "Result Grid" click on Export icon.
 					Make sure the bottom left hand corner input "Format" is set to CSV.
 					
-						select song.id, actual_band_name, actual_song_name, youtube_title, youtube_url, youtube_playlist, user_id, 
+						select song.id, actual_band_name, actual_song_name, title, youtube_url, youtube_playlist, user_id,
 								user.first_name as user_first_name, user.last_name as user_last_name, user.avatar_color as user_avatar_color 
 								from eastonOneSOD.song join eastonOneSOD.user on song.user_id = user.id 
 						        where song.id <= 2000
 						        order by song.id asc;
 						        
-						select song.id, actual_band_name, actual_song_name, youtube_title, youtube_url, youtube_playlist, user_id, 
+						select song.id, actual_band_name, actual_song_name, title, youtube_url, youtube_playlist, user_id,
 								user.first_name as user_first_name, user.last_name as user_last_name, user.avatar_color as user_avatar_color 
 								from eastonOneSOD.song join eastonOneSOD.user on song.user_id = user.id 
 						        where song.id > 2000 and song.id <= 4000
 						        order by song.id asc;
 						        
-						select song.id, actual_band_name, actual_song_name, youtube_title, youtube_url, youtube_playlist, user_id, 
+						select song.id, actual_band_name, actual_song_name, title, youtube_url, youtube_playlist, user_id,
 								user.first_name as user_first_name, user.last_name as user_last_name, user.avatar_color as user_avatar_color 
 								from eastonOneSOD.song join eastonOneSOD.user on song.user_id = user.id 
 						        where song.id > 4000 and song.id <= 6000
@@ -120,7 +120,7 @@ Set up Elastic search/Kibana
 				{
 				  "query" : {
 				    "match_phrase" : {
-				      "youtube_title" : "Ludella Black"
+				      "title" : "Ludella Black"
 				    }
 				  }
 				}
@@ -132,7 +132,7 @@ Set up Elastic search/Kibana
 				      "must": [
 					{
 					  "match": {
-					    "youtube_title": {
+					    "title": {
 					      "query": "Stones",
 					      "boost": 3
 					    }
@@ -140,7 +140,7 @@ Set up Elastic search/Kibana
 					},
 					{
 					  "match": {
-					    "youtube_title": "Rolling"
+					    "title": "Rolling"
 					  }
 					}
 				      ]
@@ -148,7 +148,7 @@ Set up Elastic search/Kibana
 				  },
 				  "highlight": {
 				    "fields": {
-				      "YouTube Title": {}
+				      "Title": {}
 				    }
 				  }
 				} 

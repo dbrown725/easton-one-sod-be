@@ -25,7 +25,7 @@ public class CSVHelper {
 				CSVPrinter csvPrinter = new CSVPrinter(new PrintWriter(out), format);) {
 			
 			List<String> headerData = Arrays.asList("id", "actual_band_name", 
-					"actual_song_name", "youtube_title", "youtube_url", "youtube_playlist", 
+					"actual_song_name", "title", "youtube_url", "youtube_playlist",
 					"user_id", "user_first_name", "user_last_name", "user_avatar_color");
 			csvPrinter.printRecord(headerData);
 			

@@ -38,12 +38,12 @@ public class ESClientConnector {
    
 
     	Map<String, HighlightField> fields = new HashMap<String, HighlightField>();
-    	fields.put("youtube_title", field);
+    	fields.put("title", field);
     	fields.put("actual_band_name", field);
     	fields.put("actual_song_name", field);
 
     	Query onTitle = MatchQuery.of(m -> m
-    		    .field("youtube_title")
+    		    .field("title")
     		    .query(song.getTitle())
     		)._toQuery();
 
@@ -75,8 +75,8 @@ public class ESClientConnector {
         List<Hit<Song>> hits = songSearchResponse.hits().hits();
         for (Hit<Song> hit: hits) {
         	Song foundSong = hit.source();
-        	if(hit.highlight().get("youtube_title") != null) {
-        		foundSong.setTitleHighlighted(hit.highlight().get("youtube_title").get(0));
+        	if(hit.highlight().get("title") != null) {
+        		foundSong.setTitleHighlighted(hit.highlight().get("title").get(0));
         	}
         	if(hit.highlight().get("actual_band_name") != null) {
         		foundSong.setBandNameHighlighted(hit.highlight().get("actual_band_name").get(0));

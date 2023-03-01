@@ -1,20 +1,21 @@
 CREATE TABLE `user` (
   `id` int NOT NULL AUTO_INCREMENT,
+  `auth_provider_uid` varchar(50) DEFAULT NULL,
   `screen_name` varchar(100) NOT NULL,
   `first_name` varchar(100) NOT NULL,
   `last_name` varchar(100) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `password` varchar(100) NOT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `avatar_color` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
- );
+);
+
 
 
 CREATE TABLE `song` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `youtube_title` varchar(100) NOT NULL,
+  `title` varchar(100) NOT NULL,
   `youtube_url` varchar(100) NOT NULL,
   `youtube_playlist` varchar(100) NOT NULL,
   `actual_band_name` varchar(100) DEFAULT NULL,
@@ -27,9 +28,10 @@ CREATE TABLE `song` (
   CONSTRAINT `user_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 );
 
+
 CREATE TABLE `bullpen_song` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `youtube_title` varchar(100) NOT NULL,
+  `title` varchar(100) NOT NULL,
   `youtube_url` varchar(100) NOT NULL,
   `actual_band_name` varchar(100) NOT NULL,
   `actual_song_name` varchar(100) NOT NULL,
@@ -42,6 +44,7 @@ CREATE TABLE `bullpen_song` (
   KEY `bullpen_song_ibfk_1` (`user_id`),
   CONSTRAINT `bullpen_song_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 );
+
 
 
 

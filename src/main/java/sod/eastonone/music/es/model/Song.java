@@ -16,7 +16,7 @@ public class Song {
 	
 	private int id;
 	
-	@JsonProperty("youtube_title")
+	@JsonProperty("title")
     private String title;
 	
 	@JsonProperty("youtube_playlist")
@@ -69,7 +69,7 @@ public class Song {
 	
 	public Song(BullpenSong bullpenSong) {
 		id = bullpenSong.getId();
-	    title = bullpenSong.getYoutubeTitle();
+	    title = bullpenSong.getTitle();
 	    link = bullpenSong.getYoutubeUrl();
 	    message = bullpenSong.getMessage();
 	    bandName = bullpenSong.getActualBandName();
@@ -82,7 +82,7 @@ public class Song {
 	
 	public Song(SodSong sodSong) {
 		id = sodSong.getId();
-	    title = sodSong.getYoutubeTitle();
+	    title = sodSong.getTitle();
 	    playlist = sodSong.getYoutubePlaylist();
 	    link = sodSong.getYoutubeUrl();
 	    bandName = sodSong.getActualBandName();
