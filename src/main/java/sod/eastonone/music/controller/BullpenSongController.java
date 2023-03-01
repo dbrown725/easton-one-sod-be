@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 
+import sod.eastonone.music.auth.models.User;
 import sod.eastonone.music.dao.entity.BullpenSong;
 import sod.eastonone.music.es.model.Song;
 import sod.eastonone.music.service.BullpenSongService;
@@ -27,11 +29,11 @@ public class BullpenSongController {
     }
     
     @QueryMapping
-    public List<Song> getAllBullpenSongs(@Argument int count) {
+    public List<Song> getAllBullpenSongs(@Argument int count, @AuthenticationPrincipal User user) {
     	
     	List<Song> songs = new ArrayList<Song>();
 
-			List<BullpenSong> bullpenSongs = bullpenSongService.getAllBullpenSongs(count);
+			List<BullpenSong> bullpenSongs = bullpenSongService.getAllBullpenSongs(user.getId(), count);
 			
 			songs = new ArrayList<Song>();
 			
@@ -48,9 +50,9 @@ public class BullpenSongController {
         @Argument String message,
         @Argument String bandName,
         @Argument String songName,
-        @Argument int userId) {
+        @AuthenticationPrincipal User user) {
 
-      BullpenSong bullpenSong = bullpenSongService.createBullpenSong(title, link, bandName, songName, message, userId);
+      BullpenSong bullpenSong = bullpenSongService.createBullpenSong(title, link, bandName, songName, message, user.getId());
       return new Song(bullpenSong);
     }
     

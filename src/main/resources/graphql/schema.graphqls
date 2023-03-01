@@ -10,12 +10,12 @@ type Query {
 }
 
 type Mutation {
-   addBullpenSong(title: String!, link: String!, message: String!, bandName: String!, songName: String!, userId: ID!):Song     
+   addBullpenSong(title: String!, link: String!, message: String!, bandName: String!, songName: String!):Song
    updateBullpenSong(id: ID!, title: String, link: String, message: String, bandName: String, songName: String, sortOrder: Int):Song
    deleteBullpenSong(id: ID!): Boolean
    
-   insertSodSong(title: String!, playlist: String!, link: String!, bandName: String!, songName: String!, message: String!, userId: ID!):Song
-   updateSodSong(id: ID!, title: String!, playlist: String!, link: String!, bandName: String!, songName: String!, userId: ID!):Song
+   insertSodSong(title: String!, playlist: String!, link: String!, bandName: String!, songName: String!, message: String!):Song
+   updateSodSong(id: ID!, title: String!, playlist: String!, link: String!, bandName: String!, songName: String!):Song
 }
 
 type Book {

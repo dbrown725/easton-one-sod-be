@@ -82,10 +82,10 @@ public class BullpenSongService {
 
 
 	@Transactional(readOnly = true)
-	public List<BullpenSong> getAllBullpenSongs(final int count) {
-		List<BullpenSong> BullpenSongss = this.bullpenSongRepository.findAll().stream().limit(count)
+	public List<BullpenSong> getAllBullpenSongs(final int userId, final int count) {
+		List<BullpenSong> bullpenSongs = bullpenSongRepository.getSongsByUserIdLimitCount(userId, count).stream().limit(count)
 				.sorted((a, b) -> Integer.compare(b.getSortOrder(), a.getSortOrder())).collect(Collectors.toList());
-		return BullpenSongss;
+		return bullpenSongs;
 	}
 
 	@Transactional(readOnly = true)

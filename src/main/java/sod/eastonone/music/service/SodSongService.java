@@ -74,7 +74,7 @@ public class SodSongService {
 
 	@Transactional
 	public Song updateSodSong(final int id, final String title, final String playlist, final String link,
-			final String bandName, final String songName, final String message,
+			final String bandName, final String songName,
 			final int userId) throws IOException {
 
 		SodSong updatedSongData = new SodSong();
