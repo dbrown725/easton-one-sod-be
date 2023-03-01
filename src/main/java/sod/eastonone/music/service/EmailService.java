@@ -47,14 +47,19 @@ public class EmailService {
 			}
 			
 			Content content = new Content("text/html",
-					"<html><body style=\\\"background-color:powderblue;\\\">" + "<div>From "
-							+ sodSong.getUser().getFirstName() + " " + sodSong.getUser().getLastName() + "</div><br/>"
-							+ msgLine + "<div><a href=\"" + sodSong.getYoutubeUrl() + "\"" + "target=\"_blank\">"
-							+ sodSong.getYoutubeTitle() + "</a></div><br/>" + "<div> Band: "
-							+ sodSong.getActualBandName() + "</div><br/>" + "<div> Song: " + sodSong.getActualSongName()
-							+ "</div><br/>" + "<div> Playlist: " + sodSong.getYoutubePlaylist() + "</div><br/>"
-							+ "<div> Visit the Song of the Day website to submit your song: " + "<a href=\""
-							+ "http://www.google.com" + "\"" + "target=\"_blank\">Coming soon!</a>" + "</div>"
+					"<html><body>"
+							+ "<div style=\"background-color:#3880FF; color:#FFFFFF; font-size:46px; text-align: center; \">Song of the Day</div><br/>"
+							+ "<div>Submitter: " + sodSong.getUser().getFirstName() + " " + sodSong.getUser().getLastName() + "</div><br/>"
+							+ msgLine
+							+ "<div><a href=\"" + sodSong.getYoutubeUrl() + "\"" + "target=\"_blank\">"
+								+ sodSong.getYoutubeTitle() + "</a></div><br/>"
+							+ "<div> Band: " + sodSong.getActualBandName() + "</div><br/>"
+							+ "<div> Song: " + sodSong.getActualSongName() + "</div><br/>"
+							+ "<div> Playlist: <a href=\"" + "https://www.youtube.com/playlist?list=PLPFWSmJg6BGh7X7DGsWLdWO-Qt27460De"
+								+ "\"" + "target=\"_blank\">" + sodSong.getYoutubePlaylist() + "</a>" + "</div><br/>"
+							+ "<div> Visit the Song of the Day website to submit your song: " +
+								"<a href=\"" + "http://www.google.com" + "\"" + "target=\"_blank\">Coming soon!</a>" + "</div><br/>"
+							+ "<div>Please do not reply. This mailbox is not monitored.</div>"
 							+ "</body></html>");
 
 			Mail mail = new Mail();
