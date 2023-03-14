@@ -104,6 +104,23 @@ public class SodSongController {
 	}
 
 	@MutationMapping
+	public Song adminInsertSodSong(@Argument String title, @Argument String playlist, @Argument String link,
+			@Argument String bandName, @Argument String songName, @Argument String message, @Argument int userId,
+			@AuthenticationPrincipal User adminUser) throws Exception {
+		logger.debug("Entering adminInsertSodSong: Admin user " + adminUser.getId() + " inserting for user " + userId);
+		Song insertedSong;
+		try {
+			insertedSong = sodSongService.createSodSong(title, playlist, link, bandName, songName, message,
+					userId);
+		} catch (Exception e) {
+			logger.error("adminInsertSodSong: error caught while Admin user " + adminUser.getId() + "  inserting for user " + userId, e);
+			throw e;
+		}
+		logger.debug("Exiting adminInsertSodSong: Admin user " + adminUser.getId() + " inserting for user " + userId);
+		return insertedSong;
+	}
+
+	@MutationMapping
 	public Song updateSodSong(@Argument int id, @Argument String title, @Argument String playlist,
 			@Argument String link, @Argument String bandName, @Argument String songName,
 			@AuthenticationPrincipal User user) throws IOException {

@@ -16,6 +16,7 @@ type Mutation {
    
    insertSodSong(title: String!, playlist: String!, link: String!, bandName: String!, songName: String!, message: String!):Song
    updateSodSong(id: ID!, title: String!, playlist: String!, link: String!, bandName: String!, songName: String!):Song
+   adminInsertSodSong(title: String!, playlist: String!, link: String!, bandName: String!, songName: String!, message: String!, userId: ID!):Song
 }
 
 type Book {
