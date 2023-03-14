@@ -6,7 +6,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.7.3</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>sod.eastonone</groupId>
 	<artifactId>music</artifactId>
@@ -18,21 +18,19 @@
 	</properties>
 	<dependencies>
 		<dependency>
-	      <groupId>co.elastic.clients</groupId>
-	      <artifactId>elasticsearch-java</artifactId>
-	      <version>8.4.1</version>
-	    </dependency>
-	
-	    <dependency>
-	      <groupId>com.fasterxml.jackson.core</groupId>
-	      <artifactId>jackson-databind</artifactId>
-	      <version>2.12.3</version>
-	    </dependency>
-	    <dependency>
-            <groupId>jakarta.json</groupId>
-            <artifactId>jakarta.json-api</artifactId>
-            <version>2.0.1</version>
-        </dependency>
+			<groupId>co.elastic.clients</groupId>
+			<artifactId>elasticsearch-java</artifactId>
+			<version>8.4.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.json</groupId>
+			<artifactId>jakarta.json-api</artifactId>
+			<version>2.0.1</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -45,26 +43,22 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		
 		<dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.24</version>
-            <optional>true</optional>
-        </dependency>
-        
-        <dependency>
-		    <groupId>org.apache.commons</groupId>
-		    <artifactId>commons-csv</artifactId>
-		    <version>1.10.0</version>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.24</version>
+			<optional>true</optional>
 		</dependency>
-
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-csv</artifactId>
+			<version>1.10.0</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -81,21 +75,19 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-security</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>com.google.firebase</groupId>
-            <artifactId>firebase-admin</artifactId>
-            <version>6.13.0</version>
-        </dependency>
 		<dependency>
-		    <groupId>com.sendgrid</groupId>
-		    <artifactId>sendgrid-java</artifactId>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>6.13.0</version>
 		</dependency>
-
+		<dependency>
+			<groupId>com.sendgrid</groupId>
+			<artifactId>sendgrid-java</artifactId>
+		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -104,5 +96,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
