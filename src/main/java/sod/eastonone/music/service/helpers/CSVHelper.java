@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,7 +27,8 @@ public class CSVHelper {
 			
 			List<String> headerData = Arrays.asList("id", "actual_band_name", 
 					"actual_song_name", "title", "youtube_url", "youtube_playlist",
-					"user_id", "user_first_name", "user_last_name", "user_avatar_color");
+					"user_id", "user_first_name", "user_last_name", "user_avatar_color",
+					"create_time", "modify_time");
 			csvPrinter.printRecord(headerData);
 			
 			for (Song song : songs) {
@@ -40,7 +42,9 @@ public class CSVHelper {
 						String.valueOf(song.getUserId()),
 						song.getUserFirstName(),
 						song.getUserLastName(),
-						song.getUserAvatarColor());
+						song.getUserAvatarColor(),
+						song.getCreateTime(),
+						song.getModifyTime());
 
 				csvPrinter.printRecord(data);
 			}

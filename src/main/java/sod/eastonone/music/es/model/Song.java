@@ -1,6 +1,7 @@
 package sod.eastonone.music.es.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -60,12 +61,15 @@ public class Song {
 	
 	@JsonProperty("user_avatar_color")
 	private String userAvatarColor;
-	
-	@JsonIgnore
-	private LocalDateTime createTime;
 
-	@JsonIgnore
-	private LocalDateTime modifyTime;
+    @JsonProperty("@timestamp")
+    public String timestamp;
+	
+	@JsonProperty("create_time")
+	private String createTime;
+
+	@JsonProperty("modify_time")
+	private String modifyTime;
 	
 	public Song(BullpenSong bullpenSong) {
 		id = bullpenSong.getId();
@@ -76,8 +80,8 @@ public class Song {
 	    songName = bullpenSong.getActualSongName();
 	    sortOrder = bullpenSong.getSortOrder();
 	    userId = bullpenSong.getUser().getId();
-	    createTime = bullpenSong.getCreateTime();
-	    modifyTime = bullpenSong.getModifyTime();
+	    createTime = localDateTimeToString(bullpenSong.getCreateTime());
+	    modifyTime = localDateTimeToString(bullpenSong.getModifyTime());
 	}
 	
 	public Song(SodSong sodSong) {
@@ -91,8 +95,12 @@ public class Song {
 	    userFirstName = sodSong.getUser().getFirstName();
 	    userLastName = sodSong.getUser().getLastName();
 	    userAvatarColor = sodSong.getUser().getAvatarColor();
-	    createTime = sodSong.getCreateTime();
-	    modifyTime = sodSong.getModifyTime();
+	    createTime = localDateTimeToString(sodSong.getCreateTime());
+	    modifyTime = localDateTimeToString(sodSong.getModifyTime());
+	}
+
+	private String localDateTimeToString(LocalDateTime dateTime) {
+		return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(dateTime);
 	}
 
 	public Song() {
