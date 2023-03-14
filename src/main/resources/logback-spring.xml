@@ -55,6 +55,31 @@
         </rollingPolicy>
     </appender>
     
+    <appender name="RollingFileAppDebug"
+        class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS}/spring-boot-logger-app-debug.log</file>
+        <!--
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+	      <level>DEBUG</level>
+	    </filter>
+        -->
+        <encoder
+            class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+        </encoder>
+
+        <rollingPolicy
+            class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily and when the file reaches 10 MegaBytes -->
+            <fileNamePattern>${LOGS}/archived/spring-boot-logger-app-debug-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
     <!-- LOG everything at INFO level -->
     <root level="info">
         <appender-ref ref="RollingFile" />
@@ -63,14 +88,11 @@
     </root>
 
 
-    <!-- LOG package "com.eastonone*" at TRACE level -->
-    <!-- 
-    <logger name="sod.eastonone" level="trace" additivity="false">
-        <appender-ref ref="RollingFile" />
+    <!-- LOG package "sod.eastonone" at debug level -->
+    <logger name="sod.eastonone" level="debug" additivity="false">
+        <appender-ref ref="RollingFileAppDebug" />
         <appender-ref ref="Console" />
-        <appender-ref ref="RollingFileSevere" />
     </logger>
-	-->
 	
 	
 </configuration>
