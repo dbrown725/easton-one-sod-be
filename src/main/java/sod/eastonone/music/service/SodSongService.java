@@ -108,11 +108,11 @@ public class SodSongService {
 			}
 			if(dataUpdated) {
 				updatedSongData.setModifyTime(LocalDateTime.now());
+				updatedSongData.setCreateTime(current.get().getCreateTime());
 				sodSongRepository.updateModifyTimeById(updatedSongData.getModifyTime(), String.valueOf(id));
 			}
 
-			Optional<SodSong> updated = sodSongRepository.findById(id);
-			sodSongSaved = updated.get();
+			sodSongSaved = updatedSongData;
 		} catch (Exception e) {
 			// add logging
 			e.printStackTrace();
