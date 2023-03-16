@@ -111,7 +111,8 @@ public class SodSongService {
 				sodSongRepository.updateModifyTimeById(updatedSongData.getModifyTime(), String.valueOf(id));
 			}
 
-			sodSongSaved = updatedSongData;
+			Optional<SodSong> updated = sodSongRepository.findById(id);
+			sodSongSaved = updated.get();
 		} catch (Exception e) {
 			// add logging
 			e.printStackTrace();
@@ -127,6 +128,7 @@ public class SodSongService {
 			// Add logging
 			// Roll back DB update?
 			e.printStackTrace();
+			throw e;
 		}
 
 		return esSong;
