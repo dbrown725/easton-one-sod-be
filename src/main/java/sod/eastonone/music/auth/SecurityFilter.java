@@ -52,7 +52,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private void verifyToken(HttpServletRequest request) {
+    private void verifyToken(HttpServletRequest request) throws ServletException{
         String session = null;
         FirebaseToken decodedToken = null;
         Credentials.CredentialType type = null;
@@ -75,6 +75,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         } catch (FirebaseAuthException e) {
             e.printStackTrace();
             log.error("Firebase Exception:: ", e.getLocalizedMessage());
+            throw new ServletException(e.getLocalizedMessage());
         }
         User user = firebaseTokenToUserDto(decodedToken);
         if (user != null) {

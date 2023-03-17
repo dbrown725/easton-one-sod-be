@@ -44,7 +44,6 @@ public class SodSongService {
 			// Insert DB
 			populateAndCleanFields(title, playlist, link, bandName, songName, userId, sodSong);
 			sodSongSaved = sodSongRepository.save(sodSong);
-			emailService.sendSODNotification(sodSongSaved, message);
 
 		} catch (Exception e) {
 			// add logging
@@ -61,13 +60,15 @@ public class SodSongService {
 			// Add logging
 			// Roll back DB insert?
 			e.printStackTrace();
+			throw e;
 		}
 		try {
-			//Send email
+			emailService.sendSODNotification(sodSongSaved, message);
 		} catch (Exception e) {
 			// Add logging
 			// Should this be fatal? If so roll back DB and ES inserts?
 			e.printStackTrace();
+			//throw e;
 		} 
 		return esSong;
 	}
