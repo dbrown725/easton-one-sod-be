@@ -13,6 +13,10 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.UserRecord;
+
 import sod.eastonone.music.auth.models.User;
 import sod.eastonone.music.es.model.Song;
 import sod.eastonone.music.service.SodSongService;
@@ -107,7 +111,13 @@ public class SodSongController {
 	public Song adminInsertSodSong(@Argument String title, @Argument String playlist, @Argument String link,
 			@Argument String bandName, @Argument String songName, @Argument String message, @Argument int userId,
 			@AuthenticationPrincipal User adminUser) throws Exception {
+
 		logger.debug("Entering adminInsertSodSong: Admin user " + adminUser.getId() + " inserting for user " + userId);
+    	if(!isAdmin(adminUser)) {
+    		logger.debug("Exception in adminInsertSodSong: User " + adminUser.getId() + " does not have Admin access");
+    		throw new Exception("Unauthorized access");
+    	}
+
 		Song insertedSong;
 		try {
 			insertedSong = sodSongService.createSodSong(title, playlist, link, bandName, songName, message,
@@ -135,5 +145,11 @@ public class SodSongController {
 		logger.debug("Exiting updateSodSong for user " + user.getId());
 		return updatedSong;
 	}
+
+    private boolean isAdmin(User user) throws FirebaseAuthException {
+    	String authProviderUid = user.getUid();
+    	UserRecord userRecord = FirebaseAuth.getInstance().getUser(authProviderUid);
+    	return (boolean) userRecord.getCustomClaims().get("ADMIN");
+    }
 
 }
