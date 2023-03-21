@@ -42,7 +42,8 @@ public class SodSongService {
 		SodSong sodSongSaved = null;
 		try {
 			// Insert DB
-			populateAndCleanFields(title, playlist, link, bandName, songName, userId, sodSong);
+			populateAndCleanFields(title, playlist, link, bandName, songName, sodSong);
+			sodSong.setUser(userRepository.findById(userId).get());
 			sodSongSaved = sodSongRepository.save(sodSong);
 
 		} catch (Exception e) {
@@ -75,17 +76,18 @@ public class SodSongService {
 
 	@Transactional
 	public Song updateSodSong(final int id, final String title, final String playlist, final String link,
-			final String bandName, final String songName,
-			final int userId) throws IOException {
+			final String bandName, final String songName) throws IOException {
 
 		SodSong updatedSongData = new SodSong();
 		SodSong sodSongSaved = null;
 		try {
 			//Update DB
 			updatedSongData.setId(id);
-			populateAndCleanFields(title, playlist, link, bandName, songName, userId, updatedSongData);
+			populateAndCleanFields(title, playlist, link, bandName, songName, updatedSongData);
 
 			Optional<SodSong> current = sodSongRepository.findById(id);
+			updatedSongData.setUser(current.get().getUser());
+
 			boolean dataUpdated = false;
 			if(!current.get().getTitle().equals(updatedSongData.getTitle())) {
 				sodSongRepository.updateTitleById(updatedSongData.getTitle(), String.valueOf(id));
@@ -101,10 +103,6 @@ public class SodSongService {
 			}
 			if(!current.get().getYoutubeUrl().equals(updatedSongData.getYoutubeUrl())) {
 				sodSongRepository.updateUrlById(updatedSongData.getYoutubeUrl(), String.valueOf(id));
-				dataUpdated = true;
-			}
-			if(current.get().getUser().getId() != updatedSongData.getUser().getId()) {
-				sodSongRepository.updateUserById(updatedSongData.getUser().getId(), String.valueOf(id));
 				dataUpdated = true;
 			}
 			if(dataUpdated) {
@@ -136,7 +134,7 @@ public class SodSongService {
 	}
 
 	private void populateAndCleanFields(final String title, final String playlist, final String link,
-			final String bandName, final String songName, final int userId, SodSong updatedSongData) {
+			final String bandName, final String songName, SodSong updatedSongData) {
 		//Replace double quotes with single quotes and commas with blanks
 		updatedSongData.setTitle(title.replace("\"", "'").replace(",", ""));
 		updatedSongData.setActualBandName(bandName.replace("\"", "'").replace(",", ""));
@@ -144,7 +142,6 @@ public class SodSongService {
 
 		updatedSongData.setYoutubePlaylist(playlist);
 		updatedSongData.setYoutubeUrl(link);
-		updatedSongData.setUser(userRepository.findById(userId).get());
 	}
 	
 	public ByteArrayInputStream loadAllSongs() {

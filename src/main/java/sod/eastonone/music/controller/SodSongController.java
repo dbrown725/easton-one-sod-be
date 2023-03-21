@@ -137,7 +137,7 @@ public class SodSongController {
 		logger.debug("Entering updateSodSong for user " + user.getId());
 		Song updatedSong;
 		try {
-			updatedSong = sodSongService.updateSodSong(id, title, playlist, link, bandName, songName, user.getId());
+			updatedSong = sodSongService.updateSodSong(id, title, playlist, link, bandName, songName);
 		} catch (Exception e) {
 			logger.error("updateSodSong: error caught for user " + user.getId(), e);
 			throw e;

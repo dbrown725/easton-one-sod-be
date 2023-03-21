@@ -58,9 +58,9 @@ public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
 			+ "    union\n"
 			+ "    select * from song where actual_song_name = ''\n"
 			+ "    union\n"
-			+ "    select * from song where actual_band_name like 'UNVERIFIED%'\n"
+			+ "    select * from song where title like '%Deleted video%'\n"
 			+ "    union\n"
-			+ "    select * from song where actual_song_name like 'UNVERIFIED%'\n"
+			+ "    select * from song where title like '%Private video%'\n"
 			+ "    order by id desc LIMIT ?1";
 
 	@Query(value=songsWithIssuesQuery, nativeQuery=true)
@@ -76,9 +76,9 @@ public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
 			+ "    union\n"
 			+ "    select * from eastonOneSOD.song where actual_song_name = ''\n"
 			+ "    union\n"
-			+ "    select * from eastonOneSOD.song where actual_band_name like 'UNVERIFIED%'\n"
+			+ "    select * from eastonOneSOD.song where title like '%Deleted video%'\n"
 			+ "    union\n"
-			+ "    select * from eastonOneSOD.song where actual_song_name like 'UNVERIFIED%'\n"
+			+ "    select * from eastonOneSOD.song where title like '%Private video%'\n"
 			+ "	) x";
 
 	@Query(value=songsWithIssuesCountQuery, nativeQuery=true)
