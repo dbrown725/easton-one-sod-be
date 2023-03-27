@@ -68,17 +68,17 @@ public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
 
 	String songsWithIssuesCountQuery = "select count(*) from\n"
 			+ "	(\n"
-			+ "	select * from eastonOneSOD.song where youtube_url = ''\n"
+			+ "	select * from song where youtube_url = ''\n"
 			+ "	union \n"
-			+ "    select * from eastonOneSOD.song where title = ''\n"
+			+ "    select * from song where title = ''\n"
 			+ "    union\n"
-			+ "    select * from eastonOneSOD.song where actual_band_name = ''\n"
+			+ "    select * from song where actual_band_name = ''\n"
 			+ "    union\n"
-			+ "    select * from eastonOneSOD.song where actual_song_name = ''\n"
+			+ "    select * from song where actual_song_name = ''\n"
 			+ "    union\n"
-			+ "    select * from eastonOneSOD.song where title like '%Deleted video%'\n"
+			+ "    select * from song where title like '%Deleted video%'\n"
 			+ "    union\n"
-			+ "    select * from eastonOneSOD.song where title like '%Private video%'\n"
+			+ "    select * from song where title like '%Private video%'\n"
 			+ "	) x";
 
 	@Query(value=songsWithIssuesCountQuery, nativeQuery=true)

@@ -10,14 +10,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import sod.eastonone.music.auth.models.User;
 import sod.eastonone.music.service.SodSongService;
 
-@CrossOrigin("http://localhost:3000")
 @Controller
 @RequestMapping("/api/csv")
 public class CSVSongController {

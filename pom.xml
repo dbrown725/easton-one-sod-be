@@ -9,7 +9,7 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>sod.eastonone</groupId>
-	<artifactId>music</artifactId>
+	<artifactId>songoftheday</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>EastonOneElasticSearch</name>
 	<description>Demo project for Spring Boot</description>
