@@ -61,9 +61,6 @@ public class Song {
 	
 	@JsonProperty("user_avatar_color")
 	private String userAvatarColor;
-
-    @JsonProperty("@timestamp")
-    public String timestamp;
 	
 	@JsonProperty("create_time")
 	private String createTime;
@@ -71,6 +68,9 @@ public class Song {
 	@JsonProperty("modify_time")
 	private String modifyTime;
 	
+	@JsonProperty("@timestamp")
+	private String timestamp;
+
 	public Song(BullpenSong bullpenSong) {
 		id = bullpenSong.getId();
 	    title = bullpenSong.getTitle();
@@ -82,6 +82,7 @@ public class Song {
 	    userId = bullpenSong.getUser().getId();
 	    createTime = localDateTimeToString(bullpenSong.getCreateTime());
 	    modifyTime = localDateTimeToString(bullpenSong.getModifyTime());
+	    timestamp = bullpenSong.getCreateTime().toString();
 	}
 	
 	public Song(SodSong sodSong) {
@@ -97,6 +98,7 @@ public class Song {
 	    userAvatarColor = sodSong.getUser().getAvatarColor();
 	    createTime = localDateTimeToString(sodSong.getCreateTime());
 	    modifyTime = localDateTimeToString(sodSong.getModifyTime());
+	    timestamp = sodSong.getCreateTime().toString();
 	}
 
 	private String localDateTimeToString(LocalDateTime dateTime) {
