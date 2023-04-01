@@ -19,6 +19,7 @@ import com.google.firebase.auth.UserRecord;
 
 import sod.eastonone.music.auth.models.User;
 import sod.eastonone.music.es.model.Song;
+import sod.eastonone.music.model.BandStats;
 import sod.eastonone.music.service.SodSongService;
 
 @Controller
@@ -144,6 +145,20 @@ public class SodSongController {
 		}
 		logger.debug("Exiting updateSodSong for user " + user.getId());
 		return updatedSong;
+	}
+
+	@QueryMapping
+	public List<BandStats> getBandStats(@Argument int count, @AuthenticationPrincipal User user) throws IOException {
+		logger.debug("Entering getBandStats for user " + user.getId());
+		List<BandStats> bandStatsList = new ArrayList<BandStats>();
+		try {
+			bandStatsList = sodSongService.getBandStats(count);
+		} catch (Exception e) {
+			logger.error("getBandStats: error caught with count " + count + " for user " + user.getId(), e);
+			throw e;
+		}
+		logger.debug("Exiting getBandStats for user " + user.getId());
+		return bandStatsList;
 	}
 
     private boolean isAdmin(User user) throws FirebaseAuthException {

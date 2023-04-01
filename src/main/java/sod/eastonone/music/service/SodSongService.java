@@ -4,8 +4,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +20,7 @@ import sod.eastonone.music.dao.repository.SodSongRepository;
 import sod.eastonone.music.dao.repository.UserRepository;
 import sod.eastonone.music.es.model.Song;
 import sod.eastonone.music.es.service.ESService;
+import sod.eastonone.music.model.BandStats;
 import sod.eastonone.music.service.helpers.CSVHelper;
 
 @Service
@@ -187,4 +192,43 @@ public class SodSongService {
 		}
         return songs;
     }
+
+	public List<BandStats> getBandStats(int count) {
+		List<BandStats> bandStatsList = new ArrayList<BandStats>();
+		Map<String, BandStats> masterBandSongs = new HashMap<String, BandStats>();
+
+		for (SodSong sodSong : sodSongRepository.getAllSodSongs()) {
+			String bandStripped = sodSong.getActualBandName().replace("\"", "").replace("The ", "").replace("the ", "")
+					.replace(" & ", " and ").replace(".", "").replace("'", "").replace("-", "").replaceAll("\\s+", "")
+					.toLowerCase();
+
+			BandStats bandMetrics = masterBandSongs.get(bandStripped.toLowerCase());
+			if (bandMetrics == null) {
+				String bandName = sodSong.getActualBandName().replace("\"", "").strip();
+				bandMetrics = new BandStats(bandName, 1);
+				masterBandSongs.put(bandStripped, bandMetrics);
+			} else {
+				int songCount = bandMetrics.getSongCount();
+				songCount++;
+				bandMetrics.setSongCount(songCount);
+			}
+		}
+
+		Map<String, BandStats> sortedMap = masterBandSongs.entrySet().stream()
+				.sorted(Map.Entry.comparingByValue())
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+				(oldValue, newValue) -> oldValue, LinkedHashMap::new));
+
+		int bandsAdded = 0;
+		for (Map.Entry<String, BandStats> entry : sortedMap.entrySet()) {
+			if(entry.getValue().getBandName() == null || entry.getValue().getBandName().isBlank()) {
+				continue;
+			}
+			if(++bandsAdded > count) {break;}
+	        BandStats bandStats = new BandStats(entry.getValue().getBandName(), entry.getValue().getSongCount());
+	        bandStatsList.add(bandStats);
+	    }
+
+		return bandStatsList;
+	}
 }
