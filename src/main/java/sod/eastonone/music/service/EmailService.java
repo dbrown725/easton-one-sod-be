@@ -29,16 +29,19 @@ public class EmailService {
 	@Value("#{'${emailservice.to-email-addresses}'.split(',')}") 
 	private List<String> toEmailAddressList;
 	 
-	public void sendSODNotification(SodSong sodSong, String message) throws Exception {
+	public void sendSODNotification(SodSong sodSong, String message, String emailAddress) throws Exception {
 		
 		try {
 			Email from = new Email(fromEmailAddress);
 			
 			var personalization = new Personalization();
 			
-			for (String toEmail : toEmailAddressList) {
-				personalization.addTo(new Email(toEmail));
-			}
+			//Temp change for testing
+//			for (String toEmail : toEmailAddressList) {
+//				personalization.addTo(new Email(toEmail));
+//			}
+			personalization.addTo(new Email(emailAddress));
+
 			String subject = "Song of the Day";
 			
 			String msgLine = "";
@@ -57,7 +60,7 @@ public class EmailService {
 							+ "<div> Song: " + sodSong.getActualSongName() + "</div><br/>"
 							+ "<div> Playlist: <a href=\"" + "https://www.youtube.com/playlist?list=PLPFWSmJg6BGh7X7DGsWLdWO-Qt27460De"
 								+ "\"" + "target=\"_blank\">" + sodSong.getYoutubePlaylist() + "</a>" + "</div><br/>"
-							+ "<div> Visit the Song of the Day website to submit your song: " +
+								+ "<div> Visit the Song of the Day website to submit your song: " +
 								"<a href=\"" + "http://www.google.com" + "\"" + "target=\"_blank\">Coming soon!</a>" + "</div><br/>"
 							+ "<div>Please do not reply. This mailbox is not monitored.</div>"
 							+ "</body></html>");

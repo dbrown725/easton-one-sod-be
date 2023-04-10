@@ -64,11 +64,11 @@ public class SodSongController {
 	}
 
 	@QueryMapping
-	public int getSongsWithIssuesCount(@AuthenticationPrincipal User user) throws IOException {
-		logger.debug("Entering getSongsWithIssuesCount for user " + user.getId());
+	public int getSongsWithIssuesCount(@AuthenticationPrincipal User user) throws Exception {
+		logger.debug("Entering getSongsWithIssuesCount for user " + user.getId() + ". isAdmin(user): " + isAdmin(user));
 		int count = 0;
 		try {
-			count = sodSongService.getAllSodSongsWithIssuesCount();
+			count = sodSongService.getAllSodSongsWithIssuesCount(user.getId(), isAdmin(user));
 		} catch (Exception e) {
 			logger.error("getSongsWithIssuesCount: error caught for user " + user.getId(), e);
 			throw e;
@@ -78,11 +78,11 @@ public class SodSongController {
 	}
 
 	@QueryMapping
-	public List<Song> getSongsWithIssues(@Argument int count, @AuthenticationPrincipal User user) throws IOException {
-		logger.debug("Entering getSongsWithIssues for user " + user.getId());
+	public List<Song> getSongsWithIssues(@Argument int count, @AuthenticationPrincipal User user) throws Exception {
+		logger.debug("Entering getSongsWithIssues for user " + user.getId() + ". isAdmin(user): " + isAdmin(user));
 		List<Song> songs = new ArrayList<Song>();
 		try {
-			songs = sodSongService.getAllSodSongsWithIssues(count);
+			songs = sodSongService.getAllSodSongsWithIssues(count, user.getId(), isAdmin(user));
 		} catch (Exception e) {
 			logger.error("getSongsWithIssues: error caught with count " + count + " for user " + user.getId(), e);
 			throw e;
@@ -164,7 +164,11 @@ public class SodSongController {
     private boolean isAdmin(User user) throws FirebaseAuthException {
     	String authProviderUid = user.getUid();
     	UserRecord userRecord = FirebaseAuth.getInstance().getUser(authProviderUid);
-    	return (boolean) userRecord.getCustomClaims().get("ADMIN");
+    	boolean isAdmin = false;
+    	if(userRecord.getCustomClaims() != null  && userRecord.getCustomClaims().get("ADMIN") != null) {
+    		isAdmin = (boolean)userRecord.getCustomClaims().get("ADMIN");
+    	}
+    	return isAdmin;
     }
 
 }

@@ -66,6 +66,22 @@ public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
 	@Query(value=songsWithIssuesQuery, nativeQuery=true)
 	public List<SodSong> getAllSodSongsWithIssues(int count);
 
+	String songsWithIssuesByUserQuery = "select * from song where youtube_url = '' and user_id = ?2\n"
+			+ "	   union \n"
+			+ "    select * from song where title = '' and user_id = ?2\n"
+			+ "    union\n"
+			+ "    select * from song where actual_band_name = '' and user_id = ?2\n"
+			+ "    union\n"
+			+ "    select * from song where actual_song_name = '' and user_id = ?2\n"
+			+ "    union\n"
+			+ "    select * from song where title like '%Deleted video%' and user_id = ?2\n"
+			+ "    union\n"
+			+ "    select * from song where title like '%Private video%' and user_id = ?2\n"
+			+ "    order by id desc LIMIT ?1";
+
+	@Query(value=songsWithIssuesByUserQuery, nativeQuery=true)
+	public List<SodSong> getAllSodSongsWithIssuesByUser(int count, int userId);
+
 	String songsWithIssuesCountQuery = "select count(*) from\n"
 			+ "	(\n"
 			+ "	select * from song where youtube_url = ''\n"
@@ -83,5 +99,23 @@ public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
 
 	@Query(value=songsWithIssuesCountQuery, nativeQuery=true)
 	public int getAllSodSongsWithIssuesCount();
+
+	String songsWithIssuesCountByUserQuery = "select count(*) from\n"
+			+ "	(\n"
+			+ "	select * from song where youtube_url = '' and user_id = ?1\n"
+			+ "	   union \n"
+			+ "    select * from song where title = '' and user_id = ?1\n"
+			+ "    union\n"
+			+ "    select * from song where actual_band_name = '' and user_id = ?1\n"
+			+ "    union\n"
+			+ "    select * from song where actual_song_name = '' and user_id = ?1\n"
+			+ "    union\n"
+			+ "    select * from song where title like '%Deleted video%' and user_id = ?1\n"
+			+ "    union\n"
+			+ "    select * from song where title like '%Private video%' and user_id = ?1\n"
+			+ "	) x";
+
+	@Query(value=songsWithIssuesCountByUserQuery, nativeQuery=true)
+	public int getAllSodSongsWithIssuesByUserCount(int userId);
 
 }

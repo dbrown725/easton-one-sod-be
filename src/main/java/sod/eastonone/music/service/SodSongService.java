@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import sod.eastonone.music.dao.entity.SodSong;
+import sod.eastonone.music.dao.entity.User;
 import sod.eastonone.music.dao.repository.SodSongRepository;
 import sod.eastonone.music.dao.repository.UserRepository;
 import sod.eastonone.music.es.model.Song;
@@ -45,10 +46,11 @@ public class SodSongService {
 		
 		SodSong sodSong = new SodSong();
 		SodSong sodSongSaved = null;
+		User user = userRepository.findById(userId).get();
 		try {
 			// Insert DB
 			populateAndCleanFields(title, playlist, link, bandName, songName, sodSong);
-			sodSong.setUser(userRepository.findById(userId).get());
+			sodSong.setUser(user);
 			sodSongSaved = sodSongRepository.save(sodSong);
 
 		} catch (Exception e) {
@@ -69,7 +71,7 @@ public class SodSongService {
 			throw e;
 		}
 		try {
-			emailService.sendSODNotification(sodSongSaved, message);
+			emailService.sendSODNotification(sodSongSaved, message, user.getEmail());
 		} catch (Exception e) {
 			// Add logging
 			// Should this be fatal? If so roll back DB and ES inserts?
@@ -157,13 +159,24 @@ public class SodSongService {
 		return CSVHelper.songsToCSV(songs);
 	}
 	
-	public int getAllSodSongsWithIssuesCount() {
-		return sodSongRepository.getAllSodSongsWithIssuesCount();
+	public int getAllSodSongsWithIssuesCount(int userId, boolean isAdmin) {
+		if(isAdmin) {
+			return sodSongRepository.getAllSodSongsWithIssuesCount();
+		} else {
+			return sodSongRepository.getAllSodSongsWithIssuesByUserCount(userId);
+		}
 	}
 
-	public List<Song> getAllSodSongsWithIssues(int count) {
+	public List<Song> getAllSodSongsWithIssues(int count, int userId, boolean isAdmin) {
 		List<Song> songs = new ArrayList<Song>();
-		for(SodSong sodSong: sodSongRepository.getAllSodSongsWithIssues(count)) {
+		List<SodSong> songsWithIssues = new ArrayList<SodSong>();
+		if(isAdmin) {
+			songsWithIssues = sodSongRepository.getAllSodSongsWithIssues(count);
+		} else {
+			songsWithIssues = sodSongRepository.getAllSodSongsWithIssuesByUser(count, userId);
+		}
+
+		for(SodSong sodSong: songsWithIssues) {
 			songs.add(new Song(sodSong));
 		}
 		return songs;
