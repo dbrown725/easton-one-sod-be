@@ -40,6 +40,7 @@ public class SodSongController {
 		List<Song> songs = new ArrayList<Song>();
 		try {
 			songs = sodSongService.songsBySearchText(searchText);
+			setUserSubmitter(songs, user);
 		} catch (Exception e) {
 			logger.error("songBySearchText: error caught while searching " + searchText + " for user " + user.getId(),
 					e);
@@ -55,6 +56,7 @@ public class SodSongController {
 		List<Song> songs = new ArrayList<Song>();
 		try {
 			songs = sodSongService.getMostRecentSongs(count);
+			setUserSubmitter(songs, user);
 		} catch (Exception e) {
 			logger.error("getMostRecentSongs: error caught with count " + count + " for user " + user.getId(), e);
 			throw e;
@@ -83,6 +85,7 @@ public class SodSongController {
 		List<Song> songs = new ArrayList<Song>();
 		try {
 			songs = sodSongService.getAllSodSongsWithIssues(count, user.getId(), isAdmin(user));
+			setUserSubmitter(songs, user);
 		} catch (Exception e) {
 			logger.error("getSongsWithIssues: error caught with count " + count + " for user " + user.getId(), e);
 			throw e;
@@ -169,6 +172,15 @@ public class SodSongController {
     		isAdmin = (boolean)userRecord.getCustomClaims().get("ADMIN");
     	}
     	return isAdmin;
+    }
+
+    private void setUserSubmitter(List<Song> songs, User user) {
+    	for (Song song : songs) {
+	    	if(song.getUserId() == user.getId()) {
+	    		song.setUserIsTheSubmitter(true);
+	    	}
+    	}
+    	return;
     }
 
 }

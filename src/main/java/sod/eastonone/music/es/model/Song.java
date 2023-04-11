@@ -71,6 +71,9 @@ public class Song {
 	@JsonProperty("@timestamp")
 	private String timestamp;
 
+	@JsonIgnore
+	private boolean userIsTheSubmitter;
+
 	public Song(BullpenSong bullpenSong) {
 		id = bullpenSong.getId();
 	    title = bullpenSong.getTitle();

@@ -54,6 +54,7 @@ type Song {
   userAvatarColor: String
   createTime: String
   modifyTime: String
+  userIsTheSubmitter: Boolean
 }
 
 type User {

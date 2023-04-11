@@ -59,7 +59,9 @@ public class BullpenSongController {
 		songs = new ArrayList<Song>();
 
 		for (BullpenSong bpSong : bullpenSongs) {
-			songs.add(new Song(bpSong));
+			Song sng = new Song(bpSong);
+			sng.setUserIsTheSubmitter(true);
+			songs.add(sng);
 		}
 		logger.debug("Exiting getAllBullpenSongs");
 		return songs;
