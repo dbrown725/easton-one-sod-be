@@ -1,6 +1,7 @@
 package sod.eastonone.music.es.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -16,7 +17,7 @@ public class Song {
 	
 	private int id;
 	
-	@JsonProperty("youtube_title")
+	@JsonProperty("title")
     private String title;
 	
 	@JsonProperty("youtube_playlist")
@@ -61,28 +62,35 @@ public class Song {
 	@JsonProperty("user_avatar_color")
 	private String userAvatarColor;
 	
-	@JsonIgnore
-	private LocalDateTime createTime;
+	@JsonProperty("create_time")
+	private String createTime;
+
+	@JsonProperty("modify_time")
+	private String modifyTime;
+	
+	@JsonProperty("@timestamp")
+	private String timestamp;
 
 	@JsonIgnore
-	private LocalDateTime modifyTime;
-	
+	private boolean userIsTheSubmitter;
+
 	public Song(BullpenSong bullpenSong) {
 		id = bullpenSong.getId();
-	    title = bullpenSong.getYoutubeTitle();
+	    title = bullpenSong.getTitle();
 	    link = bullpenSong.getYoutubeUrl();
 	    message = bullpenSong.getMessage();
 	    bandName = bullpenSong.getActualBandName();
 	    songName = bullpenSong.getActualSongName();
 	    sortOrder = bullpenSong.getSortOrder();
 	    userId = bullpenSong.getUser().getId();
-	    createTime = bullpenSong.getCreateTime();
-	    modifyTime = bullpenSong.getModifyTime();
+	    createTime = localDateTimeToString(bullpenSong.getCreateTime());
+	    modifyTime = localDateTimeToString(bullpenSong.getModifyTime());
+	    timestamp = bullpenSong.getCreateTime().toString();
 	}
 	
 	public Song(SodSong sodSong) {
 		id = sodSong.getId();
-	    title = sodSong.getYoutubeTitle();
+	    title = sodSong.getTitle();
 	    playlist = sodSong.getYoutubePlaylist();
 	    link = sodSong.getYoutubeUrl();
 	    bandName = sodSong.getActualBandName();
@@ -91,8 +99,13 @@ public class Song {
 	    userFirstName = sodSong.getUser().getFirstName();
 	    userLastName = sodSong.getUser().getLastName();
 	    userAvatarColor = sodSong.getUser().getAvatarColor();
-	    createTime = sodSong.getCreateTime();
-	    modifyTime = sodSong.getModifyTime();
+	    createTime = localDateTimeToString(sodSong.getCreateTime());
+	    modifyTime = localDateTimeToString(sodSong.getModifyTime());
+	    timestamp = sodSong.getCreateTime().toString();
+	}
+
+	private String localDateTimeToString(LocalDateTime dateTime) {
+		return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(dateTime);
 	}
 
 	public Song() {

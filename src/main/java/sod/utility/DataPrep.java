@@ -141,7 +141,7 @@ public class DataPrep {
 			FileWriter csvWriter = new FileWriter("/home/example/new.csv");
 			csvWriter.append("Id");
 			csvWriter.append(",");
-			csvWriter.append("youtube_title");
+			csvWriter.append("title");
 			csvWriter.append(",");
 			csvWriter.append("derivedBandName");
 			csvWriter.append(",");

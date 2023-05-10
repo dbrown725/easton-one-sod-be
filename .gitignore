@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### PROD config ###
+src/main/resources/application-prod.properties
+src/main/resources/application_bkup_20230507.properties
+
+### utility files for local development###
+src/main/java/sod/utility/

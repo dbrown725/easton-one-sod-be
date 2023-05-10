@@ -15,14 +15,14 @@ Set up MySql
 		Once you have installed MySQL and have a schema to work with do the following.
 			- from the back end's workspace ../support directory
 				create tables using tableCreation.sql
-				Import into the user table using userTableData.csv
-				Import into the song table the latest csv. Not checked in, see another developer for a copy.
+				Import into the user table using userTableData.csv (Update: get the latest from another developer)
+				Import into the song table the latest csv. Not checked in, see another developer for a copy and import directions.
 
 ****************************************************		
 Set up Elastic search/Kibana
 ****************************************************
 
-	Install both locally	
+	Install both Elastic Search and Kibana locally
 		Ubuntu specific instructions: https://phoenixnap.com/kb/how-to-install-elk-stack-on-ubuntu
 		Windows (untested): https://nunogois-dev.medium.com/elasticsearch-kibana-7-10-setup-on-windows-4a7bbbef28ac
 		
@@ -31,7 +31,7 @@ Set up Elastic search/Kibana
 			To allow all local IPs to be accessible
 				network.host:0.0.0.0
 				discovery.type: single-node
-				
+
 			Updated /etc/kibana/kibana.yml
 			To allow external access
 				server.host: "0.0.0.0"	
@@ -48,7 +48,11 @@ Set up Elastic search/Kibana
 	Install data (assumes data has been loaded already into MySQL "song" table)
 		In MySQL workbench
 		
-			Old Method
+			If you have the DB loaded, the front-end running and the backend running then you can login and
+			click on the Download menu option and download a CSV. The CSV can be used to load the Elastic index via Kibana.
+			You can also get a copy of the CSV from another developer.
+
+			No longer used: Old Old Method
 				Right click song table
 				Select "Table Data Export Wizard"
 				Leave column defaults and click Next
@@ -60,29 +64,29 @@ Set up Elastic search/Kibana
 				Finish
 				Inspect generated file
 				
-			New Method (includes first_name and last_name from the user table)
+			No longer used: Old Method (includes first_name and last_name from the user table)
 				Run the below queries one by one and export each resultset to a separate file. To export: "Result Grid" click on Export icon.
 					Make sure the bottom left hand corner input "Format" is set to CSV.
 					
-						select song.id, actual_band_name, actual_song_name, youtube_title, youtube_url, youtube_playlist, user_id, 
+						select song.id, actual_band_name, actual_song_name, title, youtube_url, youtube_playlist, user_id,
 								user.first_name as user_first_name, user.last_name as user_last_name, user.avatar_color as user_avatar_color 
 								from eastonOneSOD.song join eastonOneSOD.user on song.user_id = user.id 
 						        where song.id <= 2000
 						        order by song.id asc;
 						        
-						select song.id, actual_band_name, actual_song_name, youtube_title, youtube_url, youtube_playlist, user_id, 
+						select song.id, actual_band_name, actual_song_name, title, youtube_url, youtube_playlist, user_id,
 								user.first_name as user_first_name, user.last_name as user_last_name, user.avatar_color as user_avatar_color 
 								from eastonOneSOD.song join eastonOneSOD.user on song.user_id = user.id 
 						        where song.id > 2000 and song.id <= 4000
 						        order by song.id asc;
 						        
-						select song.id, actual_band_name, actual_song_name, youtube_title, youtube_url, youtube_playlist, user_id, 
+						select song.id, actual_band_name, actual_song_name, title, youtube_url, youtube_playlist, user_id,
 								user.first_name as user_first_name, user.last_name as user_last_name, user.avatar_color as user_avatar_color 
 								from eastonOneSOD.song join eastonOneSOD.user on song.user_id = user.id 
 						        where song.id > 4000 and song.id <= 6000
 						        order by song.id asc;	
 
-				Concatenate the rows from the three csv files into one csv file (for example songExport.csv) which will be used later to load ElasticSearch.
+						Concatenate the rows from the three csv files into one csv file (for example songExport.csv) which will be used later to load ElasticSearch.
 			
 	Back to Kibana http://localhost:5601		
 		Left Nav -> Analytics -> Dashboard
@@ -120,7 +124,7 @@ Set up Elastic search/Kibana
 				{
 				  "query" : {
 				    "match_phrase" : {
-				      "youtube_title" : "Ludella Black"
+				      "title" : "Ludella Black"
 				    }
 				  }
 				}
@@ -132,7 +136,7 @@ Set up Elastic search/Kibana
 				      "must": [
 					{
 					  "match": {
-					    "youtube_title": {
+					    "title": {
 					      "query": "Stones",
 					      "boost": 3
 					    }
@@ -140,7 +144,7 @@ Set up Elastic search/Kibana
 					},
 					{
 					  "match": {
-					    "youtube_title": "Rolling"
+					    "title": "Rolling"
 					  }
 					}
 				      ]
@@ -148,7 +152,7 @@ Set up Elastic search/Kibana
 				  },
 				  "highlight": {
 				    "fields": {
-				      "YouTube Title": {}
+				      "Title": {}
 				    }
 				  }
 				} 
@@ -167,21 +171,6 @@ Set up Elastic search/Kibana
 			Delete a document by id
 				DELETE /song_of_the_day/_doc/156
 		
-****************************************************
-*********** Local tech Stack ***********************
-****************************************************
-	Ubuntu 20.04.4 LTS (can be anything, windows, linux, etc....)
-	NPM 8.18.0 (any newer version is probably good)
-	Node 18.8.0 (any newer version is probably good)
-	Java OpenJDK 64-Bit Server VM (build 11.0.17+8-post-Ubuntu-1ubuntu220.04, mixed mode, sharing) (any Java 11 will work probably)
-	Elastic Search 7.17.5
-	Maven
-	Kibana 7.17.5
-	Ionic React
-	Spring-boot
-	JPA
-	Google Firebase for Bearer token based Authentication
-
 ****************************************************
 *********** Front End 	      ***********************
 ****************************************************
@@ -225,6 +214,23 @@ Set up Elastic search/Kibana
 		################      your logins to other accounts (like your bank) using this browser will fail.
 		############################################################################################################
 		############################################################################################################
+
+****************************************************
+*********** Local tech Stack ***********************
+****************************************************
+	Ubuntu 20.04.4 LTS (can be anything, windows, linux, etc....)
+	NPM 8.18.0 (any newer version is probably good)
+	Node 18.8.0 (any newer version is probably good)
+	Java OpenJDK 64-Bit Server VM (build 11.0.17+8-post-Ubuntu-1ubuntu220.04, mixed mode, sharing) (any Java 11 will work probably)
+	Elastic Search 7.17.5
+	MySQL Workbench 8.0
+	Maven
+	Kibana 7.17.5
+	Ionic React
+	Spring-boot
+	JPA
+	Google Firebase for Bearer token based Authentication
+	SendGrid for sending emails
 
 ****************************************************
 *********** Random Notes     ***********************

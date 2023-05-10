@@ -44,8 +44,8 @@ public class BullpenSong implements Serializable {
 	    	super();
 	    }
 
-	@Column(name = "youtube_title", nullable = false)
-	private String youtubeTitle;
+	@Column(name = "title", nullable = false)
+	private String title;
 	
 	@Column(name = "youtube_url", nullable = false)
 	private String youtubeUrl;

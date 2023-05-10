@@ -6,15 +6,20 @@ type Query {
   getMostRecentSongs(count: Int): [Song]
   getSongsWithIssuesCount: Int
   getSongsWithIssues(count: Int): [Song]
+  getUserInfo: User
+  getUserRole(userId: ID): String
+  getBandStats(count: Int): [BandStats]
 }
 
 type Mutation {
-   addBullpenSong(title: String!, link: String!, message: String!, bandName: String!, songName: String!, userId: ID!):Song     
+   addBullpenSong(title: String!, link: String!, message: String!, bandName: String!, songName: String!):Song
    updateBullpenSong(id: ID!, title: String, link: String, message: String, bandName: String, songName: String, sortOrder: Int):Song
    deleteBullpenSong(id: ID!): Boolean
    
-   insertSodSong(title: String!, playlist: String!, link: String!, bandName: String!, songName: String!, message: String!, userId: ID!):Song
-   updateSodSong(id: ID!, title: String!, playlist: String!, link: String!, bandName: String!, songName: String!, userId: ID!):Song
+   insertSodSong(title: String!, playlist: String!, link: String!, bandName: String!, songName: String!, message: String!):Song
+   updateSodSong(id: ID!, title: String!, playlist: String!, link: String!, bandName: String!, songName: String!):Song
+   adminInsertSodSong(title: String!, playlist: String!, link: String!, bandName: String!, songName: String!, message: String!, userId: ID!):Song
+   setUserRole(role: String!, userId: ID!): Boolean
 }
 
 type Book {
@@ -49,5 +54,23 @@ type Song {
   userAvatarColor: String
   createTime: String
   modifyTime: String
+  userIsTheSubmitter: Boolean
+}
+
+type User {
+  id: ID
+  uid: String
+  email: String
+  isEmailVerified: Boolean
+  issuer: String
+  firstName: String
+  lastName: String
+  screenName: String
+  avatarColor: String
+}
+
+type BandStats {
+  bandName: String
+  songCount: Int
 }
 

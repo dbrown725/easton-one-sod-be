@@ -22,7 +22,7 @@ public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
 
 	@Transactional
 	@Modifying
-	@Query(value = "UPDATE song s set youtube_title =?1 where s.id = ?2", nativeQuery = true)
+	@Query(value = "UPDATE song s set title =?1 where s.id = ?2", nativeQuery = true)
 	void updateTitleById(String title, String id);
 
 	@Transactional
@@ -52,36 +52,70 @@ public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
 
 	String songsWithIssuesQuery = "select * from song where youtube_url = ''\n"
 			+ "	   union \n"
-			+ "    select * from song where youtube_title = ''\n"
+			+ "    select * from song where title = ''\n"
 			+ "    union\n"
 			+ "    select * from song where actual_band_name = ''\n"
 			+ "    union\n"
 			+ "    select * from song where actual_song_name = ''\n"
 			+ "    union\n"
-			+ "    select * from song where actual_band_name like 'UNVERIFIED%'\n"
+			+ "    select * from song where title like '%Deleted video%'\n"
 			+ "    union\n"
-			+ "    select * from song where actual_song_name like 'UNVERIFIED%'\n"
+			+ "    select * from song where title like '%Private video%'\n"
 			+ "    order by id desc LIMIT ?1";
 
 	@Query(value=songsWithIssuesQuery, nativeQuery=true)
 	public List<SodSong> getAllSodSongsWithIssues(int count);
 
+	String songsWithIssuesByUserQuery = "select * from song where youtube_url = '' and user_id = ?2\n"
+			+ "	   union \n"
+			+ "    select * from song where title = '' and user_id = ?2\n"
+			+ "    union\n"
+			+ "    select * from song where actual_band_name = '' and user_id = ?2\n"
+			+ "    union\n"
+			+ "    select * from song where actual_song_name = '' and user_id = ?2\n"
+			+ "    union\n"
+			+ "    select * from song where title like '%Deleted video%' and user_id = ?2\n"
+			+ "    union\n"
+			+ "    select * from song where title like '%Private video%' and user_id = ?2\n"
+			+ "    order by id desc LIMIT ?1";
+
+	@Query(value=songsWithIssuesByUserQuery, nativeQuery=true)
+	public List<SodSong> getAllSodSongsWithIssuesByUser(int count, int userId);
+
 	String songsWithIssuesCountQuery = "select count(*) from\n"
 			+ "	(\n"
-			+ "	select * from eastonOneSOD.song where youtube_url = ''\n"
+			+ "	select * from song where youtube_url = ''\n"
 			+ "	union \n"
-			+ "    select * from eastonOneSOD.song where youtube_title = ''\n"
+			+ "    select * from song where title = ''\n"
 			+ "    union\n"
-			+ "    select * from eastonOneSOD.song where actual_band_name = ''\n"
+			+ "    select * from song where actual_band_name = ''\n"
 			+ "    union\n"
-			+ "    select * from eastonOneSOD.song where actual_song_name = ''\n"
+			+ "    select * from song where actual_song_name = ''\n"
 			+ "    union\n"
-			+ "    select * from eastonOneSOD.song where actual_band_name like 'UNVERIFIED%'\n"
+			+ "    select * from song where title like '%Deleted video%'\n"
 			+ "    union\n"
-			+ "    select * from eastonOneSOD.song where actual_song_name like 'UNVERIFIED%'\n"
+			+ "    select * from song where title like '%Private video%'\n"
 			+ "	) x";
 
 	@Query(value=songsWithIssuesCountQuery, nativeQuery=true)
 	public int getAllSodSongsWithIssuesCount();
+
+	String songsWithIssuesCountByUserQuery = "select count(*) from\n"
+			+ "	(\n"
+			+ "	select * from song where youtube_url = '' and user_id = ?1\n"
+			+ "	   union \n"
+			+ "    select * from song where title = '' and user_id = ?1\n"
+			+ "    union\n"
+			+ "    select * from song where actual_band_name = '' and user_id = ?1\n"
+			+ "    union\n"
+			+ "    select * from song where actual_song_name = '' and user_id = ?1\n"
+			+ "    union\n"
+			+ "    select * from song where title like '%Deleted video%' and user_id = ?1\n"
+			+ "    union\n"
+			+ "    select * from song where title like '%Private video%' and user_id = ?1\n"
+			+ "	) x";
+
+	@Query(value=songsWithIssuesCountByUserQuery, nativeQuery=true)
+	public int getAllSodSongsWithIssuesByUserCount(int userId);
 
 }

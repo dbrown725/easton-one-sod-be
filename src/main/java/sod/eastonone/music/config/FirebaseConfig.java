@@ -23,12 +23,13 @@ public class FirebaseConfig {
 
     @Primary
     @Bean
-    public void firebaseInit() {
+    public void firebaseInit() throws IOException{
         InputStream inputStream = null;
         try {
             inputStream = new ClassPathResource("firebase_config.json").getInputStream();
         } catch (IOException e3) {
             e3.printStackTrace();
+            throw e3;
         }
         try {
 
@@ -42,6 +43,7 @@ public class FirebaseConfig {
 
         } catch (IOException e) {
             e.printStackTrace();
+            throw e;
         }
     }
 

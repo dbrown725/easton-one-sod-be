@@ -2,6 +2,7 @@ package sod.eastonone.music.es.connector;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,12 +39,12 @@ public class ESClientConnector {
    
 
     	Map<String, HighlightField> fields = new HashMap<String, HighlightField>();
-    	fields.put("youtube_title", field);
+    	fields.put("title", field);
     	fields.put("actual_band_name", field);
     	fields.put("actual_song_name", field);
 
     	Query onTitle = MatchQuery.of(m -> m
-    		    .field("youtube_title")
+    		    .field("title")
     		    .query(song.getTitle())
     		)._toQuery();
 
@@ -75,8 +76,8 @@ public class ESClientConnector {
         List<Hit<Song>> hits = songSearchResponse.hits().hits();
         for (Hit<Song> hit: hits) {
         	Song foundSong = hit.source();
-        	if(hit.highlight().get("youtube_title") != null) {
-        		foundSong.setTitleHighlighted(hit.highlight().get("youtube_title").get(0));
+        	if(hit.highlight().get("title") != null) {
+        		foundSong.setTitleHighlighted(hit.highlight().get("title").get(0));
         	}
         	if(hit.highlight().get("actual_band_name") != null) {
         		foundSong.setBandNameHighlighted(hit.highlight().get("actual_band_name").get(0));
@@ -87,8 +88,27 @@ public class ESClientConnector {
         	foundSong.setScore(hit.score());
         	foundSongs.add(foundSong);
         }
+
+        hackScoreAdustment(song, foundSongs);
+
         return foundSongs;
     }
+
+    // Attempt to value quality (best match) over quantity (many fields had matches)
+	private void hackScoreAdustment(Song song, List<Song> foundSongs) {
+		for(Song sng: foundSongs) {
+        	if(sng.getTitle() != null && sng.getTitle().toLowerCase().contains(song.getTitle().toLowerCase())) {
+        		sng.setScore(100.00);
+        	}
+        	if(sng.getBandName() != null && sng.getBandName().toLowerCase().contains(song.getBandName().toLowerCase())) {
+        		sng.setScore(100.00);
+        	}
+        	if(sng.getSongName() != null && sng.getSongName().toLowerCase().contains(song.getSongName().toLowerCase())) {
+        		sng.setScore(100.00);
+        	}
+        }
+        foundSongs.sort(Comparator.comparing(Song::getScore).reversed());
+	}
     
     public String insertSong(Song song) throws IOException {
         IndexRequest<Song> request = IndexRequest.of(i->
