@@ -45,10 +45,19 @@ public class EmailService {
 				videoId = videoUrl.substring(17, 28);
 			}
 
-			String emailText = "<html><body>"
+			String emailText = "<html><head>"
+					+ "<style>\n"
+					+ "@media screen and (max-width: 1200px) {\n"
+					+ "    .thumbnail {\n"
+					+ "        margin: auto;\n"
+					+ "     }\n"
+					+ "}\n"
+					+ "\n"
+					+ "</style>"
+					+ "</head><body>"
 					+ "<div style=\"background-color:#3880FF; color:#FFFFFF; font-size:46px; text-align: center; \">Song of the Day</div><br/>"
-					+ "<div align=\"left\" valign=\"middle\" "
-					+ "style=\"width: 300px; height: 168px; background:url('https://i.ytimg.com/vi/" + videoId + "/hqdefault.jpg'); "
+					+ "<div class=\"thumbnail\" align=\"left\" valign=\"middle\" "
+					+ "style=\"border-radius: 15px; width: 300px; height: 168px; background:url('https://i.ytimg.com/vi/" + videoId + "/hqdefault.jpg'); "
 					+ "background-size:  cover; background-position: center; margin-bottom: 20px\">"
 					+ "<a href=\"" + videoUrl + "\"" + "target=\"_blank\""
 							+ "style=\"display:block;width:100%;text-decoration:none;height:168px;\"></a>"
