@@ -151,11 +151,11 @@ public class SodSongController {
 	}
 
 	@QueryMapping
-	public List<BandStats> getBandStats(@Argument int count, @AuthenticationPrincipal User user) throws IOException {
+	public List<BandStats> getBandStats(@Argument int count, @Argument int userId, @AuthenticationPrincipal User user) throws IOException {
 		logger.debug("Entering getBandStats for user " + user.getId());
 		List<BandStats> bandStatsList = new ArrayList<BandStats>();
 		try {
-			bandStatsList = sodSongService.getBandStats(count);
+			bandStatsList = sodSongService.getBandStats(count, userId);
 		} catch (Exception e) {
 			logger.error("getBandStats: error caught with count " + count + " for user " + user.getId(), e);
 			throw e;

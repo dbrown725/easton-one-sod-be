@@ -8,7 +8,7 @@ type Query {
   getSongsWithIssues(count: Int): [Song]
   getUserInfo: User
   getUserRole(userId: ID): String
-  getBandStats(count: Int): [BandStats]
+  getBandStats(count: Int, userId: ID): [BandStats]
 }
 
 type Mutation {

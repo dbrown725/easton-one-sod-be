@@ -206,11 +206,18 @@ public class SodSongService {
         return songs;
     }
 
-	public List<BandStats> getBandStats(int count) {
+	public List<BandStats> getBandStats(int count, int userId) {
 		List<BandStats> bandStatsList = new ArrayList<BandStats>();
 		Map<String, BandStats> masterBandSongs = new HashMap<String, BandStats>();
 
-		for (SodSong sodSong : sodSongRepository.getAllSodSongs()) {
+		List<SodSong> songs;
+		if(userId == 0) {
+			songs = sodSongRepository.getAllSodSongs();
+		} else {
+			songs = sodSongRepository.getAllSodSongsByUserId(userId);
+		}
+
+		for (SodSong sodSong : songs) {
 			String bandStripped = sodSong.getActualBandName().replace("\"", "").replace("The ", "").replace("the ", "")
 					.replace(" & ", " and ").replace(".", "").replace("'", "").replace("-", "").replaceAll("\\s+", "")
 					.toLowerCase();
