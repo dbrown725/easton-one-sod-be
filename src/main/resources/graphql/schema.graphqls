@@ -6,6 +6,7 @@ type Query {
   getMostRecentSongs(count: Int): [Song]
   getSongsWithIssuesCount: Int
   getSongsWithIssues(count: Int): [Song]
+  getSongById(songId: ID): Song
   getUserInfo: User
   getUserRole(userId: ID): String
   getBandStats(count: Int, userId: ID): [BandStats]
@@ -20,6 +21,9 @@ type Mutation {
    updateSodSong(id: ID!, title: String!, playlist: String!, link: String!, bandName: String!, songName: String!):Song
    adminInsertSodSong(title: String!, playlist: String!, link: String!, bandName: String!, songName: String!, message: String!, userId: ID!):Song
    setUserRole(role: String!, userId: ID!): Boolean
+   insertSongComment(songId: Int!, comment: String!):SongComment
+   updateSongComment(id: ID!, comment: String!):SongComment
+   deleteSongComment(id: ID!): Boolean
 }
 
 type Book {
@@ -52,9 +56,22 @@ type Song {
   userFirstName: String
   userLastName: String
   userAvatarColor: String
+  songComments: [SongComment]
   createTime: String
   modifyTime: String
   userIsTheSubmitter: Boolean
+}
+
+type SongComment {
+	id: ID
+	songId: Int
+	comment: String
+	userId: Int
+  	userFirstName: String
+  	userLastName: String
+  	userAvatarColor: String
+  	createTime: String
+  	modifyTime: String
 }
 
 type User {

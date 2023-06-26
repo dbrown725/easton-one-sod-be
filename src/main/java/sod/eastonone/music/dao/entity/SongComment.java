@@ -5,9 +5,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,22 +13,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
-@Getter
-@Setter
-@ToString
+@Data
 @Entity
-@Table(name="song")
-public class SodSong implements Serializable {
+@Table(name="song_comment")
+public class SongComment implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -39,39 +31,25 @@ public class SodSong implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	public SodSong(String id) {
+	public SongComment(String id) {
 			super();
 			this.id = Integer.parseInt(id);	
 		}
 
-	public SodSong() {
+	public SongComment() {
 	    	super();
 	    }
 
-	@Column(name = "title", nullable = false)
-	private String title;
+	@Column(name = "song_id", nullable = false)
+	private int songId;
 	
-	@Column(name = "youtube_url", nullable = false)
-	private String youtubeUrl;
-	
-	@Column(name = "youtube_playlist", nullable = false)
-	private String youtubePlaylist;
-	
-	@Column(name = "actual_band_name")
-	private String actualBandName;
-	
-	@Column(name = "actual_song_name")
-	private String actualSongName;
+	@Column(name = "comment", nullable = true)
+	private String comment;
 
 	@OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 	
-	@OneToMany(cascade=CascadeType.ALL)
-	@JoinColumn(name="song_id")
-	@OrderBy("create_time DESC")
-	private List<SongComment> songComments;
-
 	@Column(name = "create_time")
 	private LocalDateTime createTime;
 
@@ -90,6 +68,38 @@ public class SodSong implements Serializable {
 	// Getter and setter
 	public String getFormattedCreateTime() {
 		return getCreateTime().toString();
+	}
+	
+	public int getUserId() {
+		int userId = 0;
+		if(user != null) {
+			userId = user.getId();
+		}
+		return userId;
+	}
+	
+	public String getUserFirstName() {
+		String userFirstName = "";
+		if(user != null) {
+			userFirstName = user.getFirstName();
+		}
+		return userFirstName;
+	}
+	
+	public String getUserLastName() {
+		String userLastName = "";
+		if(user != null) {
+			userLastName = user.getLastName();
+		}
+		return userLastName;
+	}
+
+	public String getUserAvatarColor() {
+		String userAvatarColor = "";
+		if(user != null) {
+			userAvatarColor = user.getAvatarColor();
+		}
+		return userAvatarColor;
 	}
 
 }

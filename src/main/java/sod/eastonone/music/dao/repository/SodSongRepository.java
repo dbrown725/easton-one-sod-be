@@ -17,6 +17,9 @@ public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
 	@Query(value="SELECT * FROM song", nativeQuery=true)
 	public List<SodSong> getAllSodSongs();
 
+	@Query(value="SELECT * FROM song s where s.id = ?1", nativeQuery=true)
+	public SodSong getSongById(int songId);
+
 	@Query(value = "SELECT * FROM song s where s.user_id = ?1", nativeQuery = true)
 	public List<SodSong> getAllSodSongsByUserId(int userId);
 

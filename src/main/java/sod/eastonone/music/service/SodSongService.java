@@ -11,13 +11,18 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import sod.eastonone.music.dao.entity.BullpenSong;
 import sod.eastonone.music.dao.entity.SodSong;
+import sod.eastonone.music.dao.entity.SongComment;
 import sod.eastonone.music.dao.entity.User;
 import sod.eastonone.music.dao.repository.SodSongRepository;
+import sod.eastonone.music.dao.repository.SongCommentRepository;
 import sod.eastonone.music.dao.repository.UserRepository;
 import sod.eastonone.music.es.model.Song;
 import sod.eastonone.music.es.service.ESService;
@@ -33,6 +38,9 @@ public class SodSongService {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private SongCommentRepository songCommentRepository;
+
     @Autowired
     private ESService esService;
 
@@ -57,6 +65,10 @@ public class SodSongService {
 			// add logging
 			e.printStackTrace();
 			throw e;
+		}
+
+		if(StringUtils.isNotBlank(message)) {
+			createSodSongComment(sodSongSaved.getId(), message, userId, false);
 		}
 
 		Song esSong = new Song();
@@ -190,6 +202,11 @@ public class SodSongService {
 		return songs;
 	}
 
+	public Song getSongById(int songId) {
+		SodSong song = sodSongRepository.getSongById(songId);
+		return new Song(song);
+	}
+
     public List<Song> songsBySearchText(String searchText) throws IOException{
     	Song song = new Song();
     	song.setTitle(searchText);
@@ -251,4 +268,70 @@ public class SodSongService {
 
 		return bandStatsList;
 	}
+
+	@Transactional
+	public SongComment createSodSongComment(final int songId, final String comment, final int userId, boolean sendEmail) throws Exception {
+
+		SongComment songComment = new SongComment();
+		SongComment songCommentSaved = null;
+		User user = userRepository.findById(userId).get();
+		try {
+			// Insert DB
+			songComment.setUser(user);
+			songComment.setSongId(songId);
+			songComment.setComment(comment);
+			songCommentSaved = songCommentRepository.save(songComment);
+
+		} catch (Exception e) {
+			// add logging
+			e.printStackTrace();
+			throw e;
+		}
+
+		if(sendEmail) {
+			try {
+				emailService.sendCommentNotification(songCommentSaved, false);
+			} catch (Exception e) {
+				// Add logging
+				// Should this be fatal? If so roll back DB and ES inserts?
+				e.printStackTrace();
+				//throw e;
+			}
+		}
+
+		return songCommentSaved;
+	}
+
+	@Transactional
+	public boolean deleteSodSongComment(final int id) {
+		Optional<SongComment> songCommentOpt = songCommentRepository.findById(id);
+
+		SongComment songComment = songCommentOpt.get();
+		this.songCommentRepository.delete(songComment);
+		return true;
+	}
+
+	@Transactional
+	public SongComment updateSodSongComment(final int id, final String comment) {
+
+		Optional<SongComment> songCommentOpt = songCommentRepository.findById(id);
+
+		SongComment songComment = songCommentOpt.get();
+		if (comment != null && comment != songComment.getComment()) {
+			songComment.setModifyTime(LocalDateTime.now());
+			songComment.setComment(comment);
+		}
+
+		try {
+			emailService.sendCommentNotification(songComment, true);
+		} catch (Exception e) {
+			// Add logging
+			// Should this be fatal? If so roll back DB and ES inserts?
+			e.printStackTrace();
+			//throw e;
+		}
+
+		return this.songCommentRepository.save(songComment);
+	}
+
 }

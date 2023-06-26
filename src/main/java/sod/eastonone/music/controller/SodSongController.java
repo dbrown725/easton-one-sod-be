@@ -18,6 +18,8 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 
 import sod.eastonone.music.auth.models.User;
+import sod.eastonone.music.dao.entity.BullpenSong;
+import sod.eastonone.music.dao.entity.SongComment;
 import sod.eastonone.music.es.model.Song;
 import sod.eastonone.music.model.BandStats;
 import sod.eastonone.music.service.SodSongService;
@@ -63,6 +65,21 @@ public class SodSongController {
 		}
 		logger.debug("Exiting getMostRecentSongs for user " + user.getId());
 		return songs;
+	}
+
+	@QueryMapping
+	public Song getSongById(@Argument int songId, @AuthenticationPrincipal User user) throws IOException {
+		logger.debug("Entering getSongById for user " + user.getId());
+		Song song = null;
+		try {
+			song = sodSongService.getSongById(songId);
+			setUserSubmitter(song, user);
+		} catch (Exception e) {
+			logger.error("getSongById: error caught for user " + user.getId(), e);
+			throw e;
+		}
+		logger.debug("Exiting getSongById for user " + user.getId());
+		return song;
 	}
 
 	@QueryMapping
@@ -164,6 +181,53 @@ public class SodSongController {
 		return bandStatsList;
 	}
 
+	@MutationMapping
+	public SongComment insertSongComment(@Argument int songId, @Argument String comment,
+			@AuthenticationPrincipal User user) throws Exception {
+		logger.debug("Entering insertSongComment for user " + user.getId());
+		SongComment insertedSongComment;
+		try {
+			insertedSongComment = sodSongService.createSodSongComment(songId, comment, user.getId(), true);
+		} catch (Exception e) {
+			logger.error("insertSongComment: error caught for user " + user.getId(), e);
+			throw e;
+		}
+		logger.debug("Exiting insertSongComment for user " + user.getId());
+		return insertedSongComment;
+	}
+
+	@MutationMapping
+	public SongComment updateSongComment(@Argument int id, @Argument String comment,
+			@AuthenticationPrincipal User user) {
+
+		logger.debug("Entering updateSongComment");
+		logger.info("updateSongComment: Updating song comment with id " + id + " for user " + user.getId());
+		SongComment songComment;
+		try {
+			songComment = sodSongService.updateSodSongComment(id, comment);
+		} catch (Exception e) {
+			logger.error("updateSongComment: error caught updating song comment with id " + id + " for user " + user.getId(), e);
+			throw e;
+		}
+		logger.debug("Exiting updateSongComment");
+		return songComment;
+	}
+
+	@MutationMapping
+	public boolean deleteSongComment(@Argument int id, @AuthenticationPrincipal User user) {
+		logger.debug("Entering deleteSongComment");
+		logger.info("deleteSongComment: Deleting song comment with id " + id + " for user " + user.getId());
+		boolean deleteResponse = false;
+		try {
+			deleteResponse = sodSongService.deleteSodSongComment(id);
+		} catch (Exception e) {
+			logger.error("deleteSongComment: error caught deleting song comment with id " + id + " for user " + user.getId(), e);
+			throw e;
+		}
+		logger.debug("Exiting deleteSongComment, deleteResponse " + deleteResponse);
+		return deleteResponse;
+	}
+
     private boolean isAdmin(User user) throws FirebaseAuthException {
     	String authProviderUid = user.getUid();
     	UserRecord userRecord = FirebaseAuth.getInstance().getUser(authProviderUid);
@@ -172,6 +236,13 @@ public class SodSongController {
     		isAdmin = (boolean)userRecord.getCustomClaims().get("ADMIN");
     	}
     	return isAdmin;
+    }
+   
+    private void setUserSubmitter(Song song, User user) {
+    	List<Song> songs = new ArrayList<Song>();
+    	songs.add(song);
+    	setUserSubmitter(songs, user);
+    	return;
     }
 
     private void setUserSubmitter(List<Song> songs, User user) {
