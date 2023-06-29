@@ -70,6 +70,7 @@ type SongComment {
   	userFirstName: String
   	userLastName: String
   	userAvatarColor: String
+  	userIsTheSubmitter: Boolean
   	createTime: String
   	modifyTime: String
 }

@@ -250,6 +250,18 @@ public class SodSongController {
 	    	if(song.getUserId() == user.getId()) {
 	    		song.setUserIsTheSubmitter(true);
 	    	}
+	    	if(song.getSongComments() != null && !song.getSongComments().isEmpty()) {
+	    		setUserSubmitterOnComment(song.getSongComments(), user);
+	    	}
+    	}
+    	return;
+    }
+
+    private void setUserSubmitterOnComment(List<SongComment> comments, User user) {
+    	for (SongComment comment : comments) {
+	    	if(comment.getUserId() == user.getId()) {
+	    		comment.setUserIsTheSubmitter(true);
+	    	}
     	}
     	return;
     }

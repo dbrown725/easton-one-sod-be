@@ -16,6 +16,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
@@ -55,6 +58,10 @@ public class SongComment implements Serializable {
 
 	@Column(name = "modify_time")
 	private LocalDateTime modifyTime;
+
+	@JsonIgnore
+	@Transient
+	private boolean userIsTheSubmitter;
 
 	@PrePersist
 	protected void onCreate() {
