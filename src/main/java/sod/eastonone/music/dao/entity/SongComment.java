@@ -34,11 +34,6 @@ public class SongComment implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	public SongComment(String id) {
-			super();
-			this.id = Integer.parseInt(id);	
-		}
-
 	public SongComment() {
 	    	super();
 	    }

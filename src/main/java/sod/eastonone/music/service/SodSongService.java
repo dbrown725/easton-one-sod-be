@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -220,8 +221,24 @@ public class SodSongService {
 			e.printStackTrace();
 			throw e;
 		}
+
+    	addComments(songs);
+
         return songs;
     }
+
+	private void addComments(List<Song> songs) {
+		List<Integer> songIds = new ArrayList<Integer>();
+		songs.forEach(s -> songIds.add(s.getId()));
+		int[] songIdsArray = songIds.stream().mapToInt(i -> i).toArray();
+
+		List<SodSong> sodSongs = sodSongRepository.getAllSodSongsWithIDsIn(songIdsArray);
+
+		Map<Integer, SodSong> sodSongsMap = sodSongs.stream()
+		         .collect(Collectors.toMap(SodSong::getId, Function.identity()));
+		songs.forEach(s -> s.setSongComments(
+				sodSongsMap.get(s.getId()) != null ? sodSongsMap.get(s.getId()).getSongComments() : null));
+	}
 
 	public List<BandStats> getBandStats(int count, int userId) {
 		List<BandStats> bandStatsList = new ArrayList<BandStats>();
