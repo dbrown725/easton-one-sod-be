@@ -8,6 +8,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,6 +19,7 @@ import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import sod.eastonone.music.model.EmailPreference;
 
 @Data
 @NoArgsConstructor
@@ -52,6 +55,10 @@ public class User implements Serializable {
     @Column(name = "email", nullable = false)
     private String email;
     
+    @Enumerated(EnumType.STRING)
+    @Column(name="email_preference", columnDefinition = "ENUM('ALL', 'NEW_SONG_ONLY', 'NONE')")
+    private EmailPreference emailPreference;
+
     @Column(name = "avatar_color", nullable = false)
     private String avatarColor;
     

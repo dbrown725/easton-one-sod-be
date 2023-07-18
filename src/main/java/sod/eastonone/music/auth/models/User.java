@@ -15,6 +15,7 @@ public class User implements Serializable {
 	private String uid;
 	private String name;
 	private String email;
+	private String emailPreference;
 	private boolean isEmailVerified;
 	private String issuer;
 	private String picture;

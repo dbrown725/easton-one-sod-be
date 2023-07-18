@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 
 import sod.eastonone.music.auth.models.User;
+import sod.eastonone.music.dao.entity.SongComment;
 import sod.eastonone.music.service.UserService;
 
 @Controller
@@ -73,6 +74,24 @@ public class UserController {
 	    logger.debug("Exiting getUserRole: Admin user " + adminUser.getId() + " getting role for user " + userId);
         return response;
     }
+
+	@MutationMapping
+	public User updateEmailPreference(@Argument String emailPreference,
+			@AuthenticationPrincipal User user) {
+
+		logger.debug("Entering updateEmailPreference");
+		logger.info("updateEmailPreference: Updating user emailPreference with value " + emailPreference + " for user " + user.getId());
+
+		try {
+			sod.eastonone.music.dao.entity.User dbUser = userService.updateEmailPreference(emailPreference, user.getId());
+			user.setEmailPreference(dbUser.getEmailPreference().name());
+		} catch (Exception e) {
+			logger.error("updateEmailPreference: error caught updating user with emailPreference " + emailPreference + " for user " + user.getId(), e);
+			throw e;
+		}
+		logger.debug("Exiting updateEmailPreference");
+		return user;
+	}
 
     private boolean isAdmin(User user) throws FirebaseAuthException {
     	String authProviderUid = user.getUid();
