@@ -1,6 +1,7 @@
 package sod.eastonone.music.service;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -15,7 +16,10 @@ import org.springframework.stereotype.Service;
 
 import sod.eastonone.music.dao.entity.SodSong;
 import sod.eastonone.music.dao.entity.SongComment;
+import sod.eastonone.music.dao.entity.User;
 import sod.eastonone.music.dao.repository.SodSongRepository;
+import sod.eastonone.music.dao.repository.UserRepository;
+import sod.eastonone.music.model.EmailPreference;
 
 @Service
 public class EmailService {
@@ -32,6 +36,9 @@ public class EmailService {
 	@Autowired
 	private JavaMailSender mailSender;
 	
+	@Autowired
+	private UserRepository userRepository;
+
 	private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
 	public void sendSODNotification(SodSong sodSong, String message, String emailAddress) throws Exception {
@@ -50,6 +57,15 @@ public class EmailService {
 				videoId = videoUrl.substring(32, 43);
 			} else if (videoUrl.startsWith("https://youtu.be") && videoUrl.length() >= 28) {
 				videoId = videoUrl.substring(17, 28);
+			}
+
+			ArrayList<String> toFilteredEmailAddressList = new ArrayList<String>();
+
+			for (String recipient: toEmailAddressList) {
+			    User user = userRepository.getUserByEmailAddress(recipient);
+			    if(user.getEmailPreference().equals(EmailPreference.ALL) || user.getEmailPreference().equals(EmailPreference.NEW_SONG_ONLY)) {
+			    	toFilteredEmailAddressList.add(recipient);
+			    }
 			}
 
 			String emailText = "<html><head>"
@@ -90,7 +106,12 @@ public class EmailService {
 
 			helper.setSubject(subject);
 			helper.setFrom(fromEmailAddress);
-			helper.setTo(toEmailAddressList);
+
+	        String[] recipients = new String[toFilteredEmailAddressList.size()];
+	        for (int i = 0; i < toFilteredEmailAddressList.size(); i++) {
+	        	recipients[i] = toFilteredEmailAddressList.get(i);
+	        }
+			helper.setTo(recipients);
 
 			boolean html = true;
 			helper.setText(emailText, html);
@@ -133,6 +154,15 @@ public class EmailService {
 			}
 			String commentType = update?"updated":"created";
 
+			ArrayList<String> toFilteredEmailAddressList = new ArrayList<String>();
+
+			for (String recipient: toEmailAddressList) {
+			    User user = userRepository.getUserByEmailAddress(recipient);
+			    if(user.getEmailPreference().equals(EmailPreference.ALL)) {
+			    	toFilteredEmailAddressList.add(recipient);
+			    }
+			}
+
 			String emailText = "<html><head>"
 					+ "<style>\n"
 					+ "@media screen and (max-width: 1200px) {\n"
@@ -170,7 +200,12 @@ public class EmailService {
 
 			helper.setSubject(subject);
 			helper.setFrom(fromEmailAddress);
-			helper.setTo(toEmailAddressList);
+
+	        String[] recipients = new String[toFilteredEmailAddressList.size()];
+	        for (int i = 0; i < toFilteredEmailAddressList.size(); i++) {
+	        	recipients[i] = toFilteredEmailAddressList.get(i);
+	        }
+			helper.setTo(recipients);
 
 			boolean html = true;
 			helper.setText(emailText, html);
