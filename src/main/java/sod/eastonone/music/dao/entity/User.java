@@ -59,6 +59,9 @@ public class User implements Serializable {
     @Column(name="email_preference", columnDefinition = "ENUM('ALL', 'NEW_SONG_ONLY', 'NONE')")
     private EmailPreference emailPreference;
 
+    @Column(name = "privacy_on", nullable = false, columnDefinition = "default bit 0")
+    private boolean privacyOn = false;
+
     @Column(name = "avatar_color", nullable = false)
     private String avatarColor;
     

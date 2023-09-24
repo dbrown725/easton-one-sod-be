@@ -108,16 +108,20 @@ public class EmailService {
 			helper.setFrom(fromEmailAddress);
 
 	        String[] recipients = new String[toFilteredEmailAddressList.size()];
-	        for (int i = 0; i < toFilteredEmailAddressList.size(); i++) {
-	        	recipients[i] = toFilteredEmailAddressList.get(i);
-	        }
-			helper.setTo(recipients);
+	        if(toFilteredEmailAddressList.size() > 0) {
+		        for (int i = 0; i < toFilteredEmailAddressList.size(); i++) {
+		        	recipients[i] = toFilteredEmailAddressList.get(i);
+		        }
+				helper.setTo(recipients);
 
-			boolean html = true;
-			helper.setText(emailText, html);
+				boolean html = true;
+				helper.setText(emailText, html);
 
-			mailSender.send(mineMessage);
+				mailSender.send(mineMessage);
 			logger.debug("Email sent");
+	        } else {
+	        	logger.debug("Email not sent, no recipients");
+	        }
 		} catch (MessagingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -202,16 +206,20 @@ public class EmailService {
 			helper.setFrom(fromEmailAddress);
 
 	        String[] recipients = new String[toFilteredEmailAddressList.size()];
-	        for (int i = 0; i < toFilteredEmailAddressList.size(); i++) {
-	        	recipients[i] = toFilteredEmailAddressList.get(i);
-	        }
-			helper.setTo(recipients);
+	        if(toFilteredEmailAddressList.size() > 0) {
+		        for (int i = 0; i < toFilteredEmailAddressList.size(); i++) {
+		        	recipients[i] = toFilteredEmailAddressList.get(i);
+		        }
+				helper.setTo(recipients);
 
-			boolean html = true;
-			helper.setText(emailText, html);
-			
-			mailSender.send(mineMessage);
-			logger.debug("Email sent");
+				boolean html = true;
+				helper.setText(emailText, html);
+
+				mailSender.send(mineMessage);
+				logger.debug("Email sent");
+	        } else {
+	        	logger.debug("Email not sent, no recipients");
+	        }
 		} catch (MessagingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

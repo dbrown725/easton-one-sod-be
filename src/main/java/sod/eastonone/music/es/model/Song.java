@@ -79,6 +79,9 @@ public class Song {
 	@JsonIgnore
 	private boolean userIsTheSubmitter;
 
+	@JsonIgnore
+	private boolean privacyOn;
+
 	public Song(BullpenSong bullpenSong) {
 		id = bullpenSong.getId();
 	    title = bullpenSong.getTitle();

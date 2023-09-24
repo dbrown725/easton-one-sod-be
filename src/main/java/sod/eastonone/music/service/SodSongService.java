@@ -14,11 +14,9 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import sod.eastonone.music.dao.entity.BullpenSong;
 import sod.eastonone.music.dao.entity.SodSong;
 import sod.eastonone.music.dao.entity.SongComment;
 import sod.eastonone.music.dao.entity.User;
@@ -47,6 +45,9 @@ public class SodSongService {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private CSVHelper cvsHelper;
 
 	@Transactional
 	public Song createSodSong(final String title, final String playlist, final String link,
@@ -164,12 +165,12 @@ public class SodSongService {
 		updatedSongData.setYoutubeUrl(link);
 	}
 	
-	public ByteArrayInputStream loadAllSongs() {
+	public ByteArrayInputStream loadAllSongs(sod.eastonone.music.auth.models.User user) {
 		List<Song> songs = new ArrayList<Song>();
 		for(SodSong sodSong: sodSongRepository.getAllSodSongs()) {
 			songs.add(new Song(sodSong));
 		}
-		return CSVHelper.songsToCSV(songs);
+		return cvsHelper.songsToCSV(songs, user);
 	}
 	
 	public int getAllSodSongsWithIssuesCount(int userId, boolean isAdmin) {

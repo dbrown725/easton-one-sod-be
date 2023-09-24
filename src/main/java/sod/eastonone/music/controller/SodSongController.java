@@ -18,17 +18,20 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 
 import sod.eastonone.music.auth.models.User;
-import sod.eastonone.music.dao.entity.BullpenSong;
 import sod.eastonone.music.dao.entity.SongComment;
 import sod.eastonone.music.es.model.Song;
 import sod.eastonone.music.model.BandStats;
 import sod.eastonone.music.service.SodSongService;
+import sod.eastonone.music.service.helpers.GeneralHelper;
 
 @Controller
 public class SodSongController {
 
 	@Autowired
 	private SodSongService sodSongService;
+
+	@Autowired
+	GeneralHelper generalHelper;
 
 	private static final Logger logger = LoggerFactory.getLogger(SodSongController.class);
 
@@ -42,7 +45,7 @@ public class SodSongController {
 		List<Song> songs = new ArrayList<Song>();
 		try {
 			songs = sodSongService.songsBySearchText(searchText);
-			setUserSubmitter(songs, user);
+			generalHelper.setUserSubmitterAndPrivacy(songs, user);
 		} catch (Exception e) {
 			logger.error("songBySearchText: error caught while searching " + searchText + " for user " + user.getId(),
 					e);
@@ -58,7 +61,7 @@ public class SodSongController {
 		List<Song> songs = new ArrayList<Song>();
 		try {
 			songs = sodSongService.getMostRecentSongs(count);
-			setUserSubmitter(songs, user);
+			generalHelper.setUserSubmitterAndPrivacy(songs, user);
 		} catch (Exception e) {
 			logger.error("getMostRecentSongs: error caught with count " + count + " for user " + user.getId(), e);
 			throw e;
@@ -73,7 +76,7 @@ public class SodSongController {
 		Song song = null;
 		try {
 			song = sodSongService.getSongById(songId);
-			setUserSubmitter(song, user);
+			generalHelper.setUserSubmitterAndPrivacy(song, user);
 		} catch (Exception e) {
 			logger.error("getSongById: error caught for user " + user.getId(), e);
 			throw e;
@@ -102,7 +105,7 @@ public class SodSongController {
 		List<Song> songs = new ArrayList<Song>();
 		try {
 			songs = sodSongService.getAllSodSongsWithIssues(count, user.getId(), isAdmin(user));
-			setUserSubmitter(songs, user);
+			generalHelper.setUserSubmitterAndPrivacy(songs, user);
 		} catch (Exception e) {
 			logger.error("getSongsWithIssues: error caught with count " + count + " for user " + user.getId(), e);
 			throw e;
@@ -236,34 +239,6 @@ public class SodSongController {
     		isAdmin = (boolean)userRecord.getCustomClaims().get("ADMIN");
     	}
     	return isAdmin;
-    }
-   
-    private void setUserSubmitter(Song song, User user) {
-    	List<Song> songs = new ArrayList<Song>();
-    	songs.add(song);
-    	setUserSubmitter(songs, user);
-    	return;
-    }
-
-    private void setUserSubmitter(List<Song> songs, User user) {
-    	for (Song song : songs) {
-	    	if(song.getUserId() == user.getId()) {
-	    		song.setUserIsTheSubmitter(true);
-	    	}
-	    	if(song.getSongComments() != null && !song.getSongComments().isEmpty()) {
-	    		setUserSubmitterOnComment(song.getSongComments(), user);
-	    	}
-    	}
-    	return;
-    }
-
-    private void setUserSubmitterOnComment(List<SongComment> comments, User user) {
-    	for (SongComment comment : comments) {
-	    	if(comment.getUserId() == user.getId()) {
-	    		comment.setUserIsTheSubmitter(true);
-	    	}
-    	}
-    	return;
     }
 
 }

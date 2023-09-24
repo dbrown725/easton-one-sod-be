@@ -10,6 +10,7 @@ type Query {
   getUserInfo: User
   getUserRole(userId: ID): String
   getBandStats(count: Int, userId: ID): [BandStats]
+  getUsersForDropDown: [User]
 }
 
 type Mutation {
@@ -25,6 +26,7 @@ type Mutation {
    updateSongComment(id: ID!, comment: String!):SongComment
    deleteSongComment(id: ID!): Boolean
    updateEmailPreference(emailPreference: String!): User
+   updatePrivacyOn(privacyOn: Boolean!): User
 }
 
 type Book {
@@ -61,6 +63,7 @@ type Song {
   createTime: String
   modifyTime: String
   userIsTheSubmitter: Boolean
+  privacyOn: Boolean
 }
 
 type SongComment {
@@ -72,6 +75,7 @@ type SongComment {
   	userLastName: String
   	userAvatarColor: String
   	userIsTheSubmitter: Boolean
+  	privacyOn: Boolean
   	createTime: String
   	modifyTime: String
 }
@@ -81,6 +85,7 @@ type User {
   uid: String
   email: String
   emailPreference: String
+  privacyOn: Boolean
   isEmailVerified: Boolean
   issuer: String
   firstName: String

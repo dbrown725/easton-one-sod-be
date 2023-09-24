@@ -20,7 +20,6 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 
 import sod.eastonone.music.auth.models.User;
-import sod.eastonone.music.dao.entity.SongComment;
 import sod.eastonone.music.service.UserService;
 
 @Controller
@@ -35,6 +34,12 @@ public class UserController {
     public User getUserInfo(@AuthenticationPrincipal User user) {
     	logger.debug("Entering/Exiting getUserInfo for user " + user.getId());
         return user;
+    }
+
+    @QueryMapping
+    public List<sod.eastonone.music.auth.models.User> getUsersForDropDown() {
+    	logger.debug("Entering/Exiting getUsersForDropDown");
+        return userService.getUsersForDropDown();
     }
 
     @MutationMapping
@@ -90,6 +95,24 @@ public class UserController {
 			throw e;
 		}
 		logger.debug("Exiting updateEmailPreference");
+		return user;
+	}
+
+	@MutationMapping
+	public User updatePrivacyOn(@Argument boolean privacyOn,
+			@AuthenticationPrincipal User user) {
+
+		logger.debug("Entering updatePrivacy");
+		logger.info("updatePrivacy: Updating user privacyOn with value " + privacyOn + " for user " + user.getId());
+
+		try {
+			sod.eastonone.music.dao.entity.User dbUser = userService.updatePrivacyOn(privacyOn, user.getId());
+			user.setEmailPreference(dbUser.getEmailPreference().name());
+		} catch (Exception e) {
+			logger.error("updatePrivacy: error caught updating user with privacyOn " + privacyOn + " for user " + user.getId(), e);
+			throw e;
+		}
+		logger.debug("Exiting updatePrivacy");
 		return user;
 	}
 

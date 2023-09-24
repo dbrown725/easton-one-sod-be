@@ -58,6 +58,10 @@ public class SongComment implements Serializable {
 	@Transient
 	private boolean userIsTheSubmitter;
 
+	@JsonIgnore
+	@Transient
+	private boolean privacyOn;
+
 	@PrePersist
 	protected void onCreate() {
 		createTime = Instant.ofEpochMilli((new Date()).getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
