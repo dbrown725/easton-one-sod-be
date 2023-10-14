@@ -29,7 +29,7 @@ public class CSVSongController {
 	public ResponseEntity<Resource> getFile(@AuthenticationPrincipal User user) {
 		logger.debug("Entering getFile for user " + user.getId());
 		String filename = "songs.csv";
-		InputStreamResource file = new InputStreamResource(sodSongService.loadAllSongs());
+		InputStreamResource file = new InputStreamResource(sodSongService.loadAllSongs(user));
 
 		ResponseEntity<Resource> response = null;
 		try {
@@ -42,4 +42,5 @@ public class CSVSongController {
 		logger.debug("Exiting getFile for user " + user.getId());
 		return response;
 	}
+
 }

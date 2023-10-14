@@ -36,6 +36,12 @@ public class UserController {
         return user;
     }
 
+    @QueryMapping
+    public List<sod.eastonone.music.auth.models.User> getUsersForDropDown() {
+    	logger.debug("Entering/Exiting getUsersForDropDown");
+        return userService.getUsersForDropDown();
+    }
+
     @MutationMapping
     public Boolean setUserRole(@Argument String role, @Argument int userId, @AuthenticationPrincipal User adminUser) throws Exception {
     	logger.debug("Entering setUserRole: Admin user " + adminUser.getId() + " setting role for user " + userId);
@@ -73,6 +79,42 @@ public class UserController {
 	    logger.debug("Exiting getUserRole: Admin user " + adminUser.getId() + " getting role for user " + userId);
         return response;
     }
+
+	@MutationMapping
+	public User updateEmailPreference(@Argument String emailPreference,
+			@AuthenticationPrincipal User user) {
+
+		logger.debug("Entering updateEmailPreference");
+		logger.info("updateEmailPreference: Updating user emailPreference with value " + emailPreference + " for user " + user.getId());
+
+		try {
+			sod.eastonone.music.dao.entity.User dbUser = userService.updateEmailPreference(emailPreference, user.getId());
+			user.setEmailPreference(dbUser.getEmailPreference().name());
+		} catch (Exception e) {
+			logger.error("updateEmailPreference: error caught updating user with emailPreference " + emailPreference + " for user " + user.getId(), e);
+			throw e;
+		}
+		logger.debug("Exiting updateEmailPreference");
+		return user;
+	}
+
+	@MutationMapping
+	public User updatePrivacyOn(@Argument boolean privacyOn,
+			@AuthenticationPrincipal User user) {
+
+		logger.debug("Entering updatePrivacy");
+		logger.info("updatePrivacy: Updating user privacyOn with value " + privacyOn + " for user " + user.getId());
+
+		try {
+			sod.eastonone.music.dao.entity.User dbUser = userService.updatePrivacyOn(privacyOn, user.getId());
+			user.setEmailPreference(dbUser.getEmailPreference().name());
+		} catch (Exception e) {
+			logger.error("updatePrivacy: error caught updating user with privacyOn " + privacyOn + " for user " + user.getId(), e);
+			throw e;
+		}
+		logger.debug("Exiting updatePrivacy");
+		return user;
+	}
 
     private boolean isAdmin(User user) throws FirebaseAuthException {
     	String authProviderUid = user.getUid();

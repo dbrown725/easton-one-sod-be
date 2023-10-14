@@ -2,6 +2,7 @@ package sod.eastonone.music.es.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import sod.eastonone.music.dao.entity.BullpenSong;
 import sod.eastonone.music.dao.entity.SodSong;
+import sod.eastonone.music.dao.entity.SongComment;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL) 
@@ -62,6 +64,9 @@ public class Song {
 	@JsonProperty("user_avatar_color")
 	private String userAvatarColor;
 	
+	@JsonIgnore
+	private List<SongComment> songComments;
+
 	@JsonProperty("create_time")
 	private String createTime;
 
@@ -73,6 +78,9 @@ public class Song {
 
 	@JsonIgnore
 	private boolean userIsTheSubmitter;
+
+	@JsonIgnore
+	private boolean privacyOn;
 
 	public Song(BullpenSong bullpenSong) {
 		id = bullpenSong.getId();
@@ -99,6 +107,7 @@ public class Song {
 	    userFirstName = sodSong.getUser().getFirstName();
 	    userLastName = sodSong.getUser().getLastName();
 	    userAvatarColor = sodSong.getUser().getAvatarColor();
+	    songComments = sodSong.getSongComments();
 	    createTime = localDateTimeToString(sodSong.getCreateTime());
 	    modifyTime = localDateTimeToString(sodSong.getModifyTime());
 	    timestamp = sodSong.getCreateTime().toString();
