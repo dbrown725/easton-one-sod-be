@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,8 +18,17 @@ public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
 	@Query(value="SELECT * FROM song", nativeQuery=true)
 	public List<SodSong> getAllSodSongs();
 
+	@Query(value="SELECT * FROM song s where s.id = ?1", nativeQuery=true)
+	public SodSong getSongById(int songId);
+
+	@Query(value = "SELECT * FROM song s where s.user_id = ?1", nativeQuery = true)
+	public List<SodSong> getAllSodSongsByUserId(int userId);
+
 	@Query(value="SELECT * FROM song ORDER BY id DESC LIMIT ?1", nativeQuery=true)
 	public List<SodSong> getMostRecentSongs(int count);
+
+	@Query(value="SELECT * FROM song where song.id IN (:songIds) ORDER BY song.id", nativeQuery=true)
+	public List<SodSong> getAllSodSongsWithIDsIn(@Param("songIds") int[] songIds);
 
 	@Transactional
 	@Modifying
