@@ -30,6 +30,9 @@ public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
 	@Query(value="SELECT * FROM song where song.id IN (:songIds) ORDER BY song.id", nativeQuery=true)
 	public List<SodSong> getAllSodSongsWithIDsIn(@Param("songIds") int[] songIds);
 
+	@Query(value="SELECT * FROM eastonOneSOD.song WHERE SUBSTRING(create_time, 1, 10) = SUBSTRING(DATE_SUB(NOW(),INTERVAL 7 YEAR), 1, 10) ORDER BY song.id", nativeQuery=true)
+	public List<SodSong> getAllSodSongsSevenYearsOld();
+
 	@Transactional
 	@Modifying
 	@Query(value = "UPDATE song s set title =?1 where s.id = ?2", nativeQuery = true)

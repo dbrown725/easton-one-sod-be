@@ -1,7 +1,11 @@
 package sod.eastonone.music.service;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -217,6 +221,130 @@ public class EmailService {
 
 				mailSender.send(mineMessage);
 				logger.debug("Email sent");
+	        } else {
+	        	logger.debug("Email not sent, no recipients");
+	        }
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+
+	}
+
+	public void sendFlashbackSongs(List<SodSong> sodSongs) throws Exception {
+
+		try {
+			LocalDate today = LocalDate.now();
+
+			String dayOfTheWeek = today.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
+			String title = "Flashback " + dayOfTheWeek + "!";
+
+			ArrayList<String> toFilteredEmailAddressList = new ArrayList<String>();
+
+			for (String recipient: toEmailAddressList) {
+			    User user = userRepository.getUserByEmailAddress(recipient);
+			    if(user.getEmailPreference().equals(EmailPreference.ALL) || user.getEmailPreference().equals(EmailPreference.NEW_SONG_ONLY)) {
+			    	toFilteredEmailAddressList.add(recipient);
+			    }
+			}
+
+			StringBuilder emailContent = new StringBuilder();
+
+			String	emailStart = "<html><head>"
+						+ "<style>\n"
+						+ "@media screen and (max-width: 1200px) {\n"
+						+ "    .thumbnail {\n"
+						+ "        margin: auto;\n"
+						+ "     }\n"
+						+ "}\n"
+						+ "\n"
+						+ "	hr {\n"
+						+ "    background: transparent !important;\n"
+						+ "    border-bottom: 2px dashed white !important;\n"
+						+ "    width: 40%; margin: 40px auto !important;\n"
+						+ "\n"
+						+ "    &:before !important {\n"
+						+ "      top: 3px;\n"
+						+ "      left: 0;\n"
+						+ "      padding-right: 2em;\n"
+						+ "    }\n"
+						+ "  }\n"
+						+ "\n"
+						+ "</style>"
+						+ "</head><body>"
+						+ "<div style=\"background-color:#3880FF; color:#FFFFFF; font-size:46px; text-align: center; \">Seven years ago today</div><br/>";
+
+			emailContent.append(emailStart);
+
+			if(sodSongs != null && sodSongs.size() != 0) {
+
+				int j = 0;
+				for(SodSong sodSong: sodSongs) {
+					String videoId = "";
+					String videoUrl = sodSong.getYoutubeUrl();
+					if (videoUrl.startsWith("https://www.youtube.com") && videoUrl.length() >= 43) {
+						videoId = videoUrl.substring(32, 43);
+					} else if (videoUrl.startsWith("https://youtu.be") && videoUrl.length() >= 28) {
+						videoId = videoUrl.substring(17, 28);
+					}
+
+					String songEmailContent = "<div class=\"thumbnail\" align=\"left\" valign=\"middle\" "
+					+ "style=\"border-radius: 15px; width: 300px; height: 168px; background:url('https://i.ytimg.com/vi/" + videoId + "/hqdefault.jpg'); "
+					+ "background-size:  cover; background-position: center; margin-bottom: 20px\">"
+					+ "<a href=\"" + videoUrl + "\"" + "target=\"_blank\""
+							+ "style=\"display:block;width:100%;text-decoration:none;height:168px;\"></a>"
+					+ "</div>"
+
+					+ "<div>Submitter: " + sodSong.getUser().getFirstName() + " " + sodSong.getUser().getLastName() + "</div><br/>"
+
+					+ "<div><a href=\"" + videoUrl + "\""
+					+ "target=\"_blank\">" + sodSong.getTitle() + "</a></div><br/>"
+
+					+ "<div> Band: "
+					+ sodSong.getActualBandName() + "</div><br/>" + "<div> Song: " + sodSong.getActualSongName()
+					+ "</div><br/>"
+
+					+ "<div>To add a new comment click<a href=\"" + "http://songofthedaymusic.com/?commentSongId=" + sodSong.getId() + "\""
+					+ "target=\"_blank\"> here.</a>" + "</div><br/>"
+
+					+ "<div> Playlist: <a href=\""
+					+ "https://www.youtube.com/playlist?list=PLPFWSmJg6BGh7X7DGsWLdWO-Qt27460De" + "\""
+					+ "target=\"_blank\">" + sodSong.getYoutubePlaylist() + "</a>" + "</div><br/>"
+					+ (j++ == sodSongs.size() - 1 ? "" : "<hr/>");
+
+					emailContent.append(songEmailContent);
+				}
+
+			} else {
+				emailContent.append("No songs submitted on this date.<br/>");
+			}
+
+			String emailEnd = "<br/><div> Visit the "
+					+ "<a href=\"" + "http://songofthedaymusic.com" + "\""
+					+ "target=\"_blank\">Song of the day</a> website to submit your song." + "</div><br/>"
+					+ "</body></html>";
+
+			emailContent.append(emailEnd);
+
+			MimeMessage mineMessage = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(mineMessage);
+
+			helper.setSubject(title);
+			helper.setFrom(fromEmailAddress);
+
+	        String[] recipients = new String[toFilteredEmailAddressList.size()];
+	        if(toFilteredEmailAddressList.size() > 0) {
+		        for (int i = 0; i < toFilteredEmailAddressList.size(); i++) {
+		        	recipients[i] = toFilteredEmailAddressList.get(i);
+		        }
+				helper.setTo(recipients);
+
+				boolean html = true;
+				helper.setText(emailContent.toString(), html);
+
+				mailSender.send(mineMessage);
+			logger.debug("Email sent");
 	        } else {
 	        	logger.debug("Email not sent, no recipients");
 	        }
