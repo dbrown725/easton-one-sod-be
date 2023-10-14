@@ -9,15 +9,19 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import sod.eastonone.music.dao.entity.SodSong;
+import sod.eastonone.music.dao.entity.SongComment;
 import sod.eastonone.music.dao.entity.User;
 import sod.eastonone.music.dao.repository.SodSongRepository;
+import sod.eastonone.music.dao.repository.SongCommentRepository;
 import sod.eastonone.music.dao.repository.UserRepository;
 import sod.eastonone.music.es.model.Song;
 import sod.eastonone.music.es.service.ESService;
@@ -33,11 +37,17 @@ public class SodSongService {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private SongCommentRepository songCommentRepository;
+
     @Autowired
     private ESService esService;
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private CSVHelper cvsHelper;
 
 	@Transactional
 	public Song createSodSong(final String title, final String playlist, final String link,
@@ -57,6 +67,10 @@ public class SodSongService {
 			// add logging
 			e.printStackTrace();
 			throw e;
+		}
+
+		if(StringUtils.isNotBlank(message)) {
+			createSodSongComment(sodSongSaved.getId(), message, userId, false);
 		}
 
 		Song esSong = new Song();
@@ -151,12 +165,12 @@ public class SodSongService {
 		updatedSongData.setYoutubeUrl(link);
 	}
 	
-	public ByteArrayInputStream loadAllSongs() {
+	public ByteArrayInputStream loadAllSongs(sod.eastonone.music.auth.models.User user) {
 		List<Song> songs = new ArrayList<Song>();
 		for(SodSong sodSong: sodSongRepository.getAllSodSongs()) {
 			songs.add(new Song(sodSong));
 		}
-		return CSVHelper.songsToCSV(songs);
+		return cvsHelper.songsToCSV(songs, user);
 	}
 	
 	public int getAllSodSongsWithIssuesCount(int userId, boolean isAdmin) {
@@ -190,6 +204,11 @@ public class SodSongService {
 		return songs;
 	}
 
+	public Song getSongById(int songId) {
+		SodSong song = sodSongRepository.getSongById(songId);
+		return new Song(song);
+	}
+
     public List<Song> songsBySearchText(String searchText) throws IOException{
     	Song song = new Song();
     	song.setTitle(searchText);
@@ -203,14 +222,37 @@ public class SodSongService {
 			e.printStackTrace();
 			throw e;
 		}
+
+    	addComments(songs);
+
         return songs;
     }
 
-	public List<BandStats> getBandStats(int count) {
+	private void addComments(List<Song> songs) {
+		List<Integer> songIds = new ArrayList<Integer>();
+		songs.forEach(s -> songIds.add(s.getId()));
+		int[] songIdsArray = songIds.stream().mapToInt(i -> i).toArray();
+
+		List<SodSong> sodSongs = sodSongRepository.getAllSodSongsWithIDsIn(songIdsArray);
+
+		Map<Integer, SodSong> sodSongsMap = sodSongs.stream()
+		         .collect(Collectors.toMap(SodSong::getId, Function.identity()));
+		songs.forEach(s -> s.setSongComments(
+				sodSongsMap.get(s.getId()) != null ? sodSongsMap.get(s.getId()).getSongComments() : null));
+	}
+
+	public List<BandStats> getBandStats(int count, int userId) {
 		List<BandStats> bandStatsList = new ArrayList<BandStats>();
 		Map<String, BandStats> masterBandSongs = new HashMap<String, BandStats>();
 
-		for (SodSong sodSong : sodSongRepository.getAllSodSongs()) {
+		List<SodSong> songs;
+		if(userId == 0) {
+			songs = sodSongRepository.getAllSodSongs();
+		} else {
+			songs = sodSongRepository.getAllSodSongsByUserId(userId);
+		}
+
+		for (SodSong sodSong : songs) {
 			String bandStripped = sodSong.getActualBandName().replace("\"", "").replace("The ", "").replace("the ", "")
 					.replace(" & ", " and ").replace(".", "").replace("'", "").replace("-", "").replaceAll("\\s+", "")
 					.toLowerCase();
@@ -244,4 +286,70 @@ public class SodSongService {
 
 		return bandStatsList;
 	}
+
+	@Transactional
+	public SongComment createSodSongComment(final int songId, final String comment, final int userId, boolean sendEmail) throws Exception {
+
+		SongComment songComment = new SongComment();
+		SongComment songCommentSaved = null;
+		User user = userRepository.findById(userId).get();
+		try {
+			// Insert DB
+			songComment.setUser(user);
+			songComment.setSongId(songId);
+			songComment.setComment(comment);
+			songCommentSaved = songCommentRepository.save(songComment);
+
+		} catch (Exception e) {
+			// add logging
+			e.printStackTrace();
+			throw e;
+		}
+
+		if(sendEmail) {
+			try {
+				emailService.sendCommentNotification(songCommentSaved, false);
+			} catch (Exception e) {
+				// Add logging
+				// Should this be fatal? If so roll back DB and ES inserts?
+				e.printStackTrace();
+				//throw e;
+			}
+		}
+
+		return songCommentSaved;
+	}
+
+	@Transactional
+	public boolean deleteSodSongComment(final int id) {
+		Optional<SongComment> songCommentOpt = songCommentRepository.findById(id);
+
+		SongComment songComment = songCommentOpt.get();
+		this.songCommentRepository.delete(songComment);
+		return true;
+	}
+
+	@Transactional
+	public SongComment updateSodSongComment(final int id, final String comment) {
+
+		Optional<SongComment> songCommentOpt = songCommentRepository.findById(id);
+
+		SongComment songComment = songCommentOpt.get();
+		if (comment != null && comment != songComment.getComment()) {
+			songComment.setModifyTime(LocalDateTime.now());
+			songComment.setComment(comment);
+		}
+
+		try {
+			emailService.sendCommentNotification(songComment, true);
+		} catch (Exception e) {
+			// Add logging
+			// Should this be fatal? If so roll back DB and ES inserts?
+			e.printStackTrace();
+			//throw e;
+		}
+
+		return this.songCommentRepository.save(songComment);
+	}
+
 }
