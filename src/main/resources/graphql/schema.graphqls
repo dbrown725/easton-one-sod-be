@@ -6,6 +6,8 @@ type Query {
   getMostRecentSongs(count: Int): [Song]
   getSongsWithIssuesCount: Int
   getSongsWithIssues(count: Int): [Song]
+  getAllInvalidUrlSongsCount: Int
+  getAllInvalidUrlSongs: [Song]
   getSongById(songId: ID): Song
   getUserInfo: User
   getUserRole(userId: ID): String
@@ -49,6 +51,7 @@ type Song {
   bandNameHighlighted: String
   songNameHighlighted: String
   link: String
+  linkValid: Boolean
   playlist: String
   bandName: String
   songName: String

@@ -29,6 +29,9 @@ public class Song {
     private String link;
 	
 	@JsonIgnore
+	private boolean linkValid;
+
+	@JsonIgnore
 	private Double score;
 	
 	@JsonIgnore
@@ -101,6 +104,7 @@ public class Song {
 	    title = sodSong.getTitle();
 	    playlist = sodSong.getYoutubePlaylist();
 	    link = sodSong.getYoutubeUrl();
+	    linkValid = sodSong.isYoutubeUrlValid();
 	    bandName = sodSong.getActualBandName();
 	    songName = sodSong.getActualSongName();
 	    userId = sodSong.getUser().getId();

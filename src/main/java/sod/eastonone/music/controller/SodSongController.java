@@ -114,6 +114,35 @@ public class SodSongController {
 		return songs;
 	}
 
+	@QueryMapping
+	public int getAllInvalidUrlSongsCount(@AuthenticationPrincipal User user) throws Exception {
+		logger.debug("Entering getAllInvalidUrlSodSongsCount for user " + user.getId() + ". isAdmin(user): " + isAdmin(user));
+		int count = 0;
+		try {
+			count = sodSongService.getAllInvalidUrlSodSongsCount(user.getId(), isAdmin(user));
+		} catch (Exception e) {
+			logger.error("getAllInvalidUrlSodSongsCount: error caught for user " + user.getId(), e);
+			throw e;
+		}
+		logger.debug("Exiting getAllInvalidUrlSodSongsCount for user " + user.getId());
+		return count;
+	}
+
+	@QueryMapping
+	public List<Song> getAllInvalidUrlSongs(@AuthenticationPrincipal User user) throws Exception {
+		logger.debug("Entering getAllInvalidUrlSodSongs for user " + user.getId() + ". isAdmin(user): " + isAdmin(user));
+		List<Song> songs = new ArrayList<Song>();
+		try {
+			songs = sodSongService.getAllInvalidUrlSodSongs(user.getId(), isAdmin(user));
+			generalHelper.setUserSubmitterAndPrivacy(songs, user);
+		} catch (Exception e) {
+			logger.error("getAllInvalidUrlSodSongs: error caught with for user " + user.getId(), e);
+			throw e;
+		}
+		logger.debug("Exiting getAllInvalidUrlSodSongs for user " + user.getId());
+		return songs;
+	}
+
 	@MutationMapping
 	public Song insertSodSong(@Argument String title, @Argument String playlist, @Argument String link,
 			@Argument String bandName, @Argument String songName, @Argument String message,

@@ -25,13 +25,14 @@ public class FlashbackEmailScheduler {
     
     private static final Logger logger = LoggerFactory.getLogger(FlashbackEmailScheduler.class);
 
-	@Scheduled(cron = "0 0 12 * * ?")
+    @Scheduled(cron = "0 0 12 * * ?")
 	public void cronJobSch() {		
 		logger.debug("Flashback email job starting");
 		List<SodSong> sodSongs = sodSongRepository.getAllSodSongsSevenYearsOld();
 		
 		try {
 			emailService.sendFlashbackSongs(sodSongs);
+			logger.debug("Flashback email job ended");
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("Flashback email job failed with", e);
