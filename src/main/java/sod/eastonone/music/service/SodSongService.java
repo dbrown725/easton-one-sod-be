@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -96,6 +97,14 @@ public class SodSongService {
 	}
 
 	@Transactional
+	public SodSong updateUrlValid(SodSong song, final boolean urlValid) {
+
+		song.setYoutubeUrlValid(urlValid);
+
+		return this.sodSongRepository.save(song);
+	}
+
+	@Transactional
 	public Song updateSodSong(final int id, final String title, final String playlist, final String link,
 			final String bandName, final String songName) throws IOException {
 
@@ -124,6 +133,7 @@ public class SodSongService {
 			}
 			if(!current.get().getYoutubeUrl().equals(updatedSongData.getYoutubeUrl())) {
 				sodSongRepository.updateUrlById(updatedSongData.getYoutubeUrl(), String.valueOf(id));
+				sodSongRepository.updateUrlValidById(true, String.valueOf(id));
 				dataUpdated = true;
 			}
 			if(dataUpdated) {
@@ -172,7 +182,7 @@ public class SodSongService {
 		}
 		return cvsHelper.songsToCSV(songs, user);
 	}
-	
+
 	public int getAllSodSongsWithIssuesCount(int userId, boolean isAdmin) {
 		if(isAdmin) {
 			return sodSongRepository.getAllSodSongsWithIssuesCount();
@@ -191,6 +201,29 @@ public class SodSongService {
 		}
 
 		for(SodSong sodSong: songsWithIssues) {
+			songs.add(new Song(sodSong));
+		}
+		return songs;
+	}
+
+	public int getAllInvalidUrlSodSongsCount(int userId, boolean isAdmin) {
+		if(isAdmin) {
+			return sodSongRepository.getAllSodSongsWithInvalidUrlsCount();
+		} else {
+			return sodSongRepository.getAllSodSongsWithInvalidUrlsByUserIdCount(userId);
+		}
+	}
+
+	public List<Song> getAllInvalidUrlSodSongs(int userId, boolean isAdmin) {
+		List<Song> songs = new ArrayList<Song>();
+		List<SodSong> invaildSongs = new ArrayList<SodSong>();
+		if(isAdmin) {
+			invaildSongs = sodSongRepository.getAllSodSongsWithInvalidUrls();
+		} else {
+			invaildSongs = sodSongRepository.getAllSodSongsWithInvalidUrlsByUserId(userId);
+		}
+
+		for(SodSong sodSong: invaildSongs) {
 			songs.add(new Song(sodSong));
 		}
 		return songs;

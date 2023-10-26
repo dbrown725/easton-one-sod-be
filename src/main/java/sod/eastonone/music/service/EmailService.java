@@ -24,6 +24,7 @@ import sod.eastonone.music.dao.entity.User;
 import sod.eastonone.music.dao.repository.SodSongRepository;
 import sod.eastonone.music.dao.repository.UserRepository;
 import sod.eastonone.music.model.EmailPreference;
+import sod.eastonone.music.utils.CommonUtils;
 
 @Service
 public class EmailService {
@@ -47,6 +48,8 @@ public class EmailService {
 
 	public void sendSODNotification(SodSong sodSong, String message, String emailAddress) throws Exception {
 
+		CommonUtils utils = new CommonUtils();
+
 		try {
 			String subject = "Song of the Day";
 
@@ -55,13 +58,8 @@ public class EmailService {
 				msgLine = "<div>" + message + "</div><br/>";
 			}
 
-			String videoId = "";
+			String songImageUrl = utils.getThumbnailUrl(sodSong.getYoutubeUrl());
 			String videoUrl = sodSong.getYoutubeUrl();
-			if (videoUrl.startsWith("https://www.youtube.com") && videoUrl.length() >= 43) {
-				videoId = videoUrl.substring(32, 43);
-			} else if (videoUrl.startsWith("https://youtu.be") && videoUrl.length() >= 28) {
-				videoId = videoUrl.substring(17, 28);
-			}
 
 			ArrayList<String> toFilteredEmailAddressList = new ArrayList<String>();
 
@@ -84,7 +82,7 @@ public class EmailService {
 					+ "</head><body>"
 					+ "<div style=\"background-color:#3880FF; color:#FFFFFF; font-size:46px; text-align: center; \">Song of the Day</div><br/>"
 					+ "<div class=\"thumbnail\" align=\"left\" valign=\"middle\" "
-					+ "style=\"border-radius: 15px; width: 300px; height: 168px; background:url('https://i.ytimg.com/vi/" + videoId + "/hqdefault.jpg'); "
+					+ "style=\"border-radius: 15px; width: 300px; height: 168px; background:url('" + songImageUrl + "'); "
 					+ "background-size:  cover; background-position: center; margin-bottom: 20px\">"
 					+ "<a href=\"" + videoUrl + "\"" + "target=\"_blank\""
 							+ "style=\"display:block;width:100%;text-decoration:none;height:168px;\"></a>"
@@ -136,18 +134,15 @@ public class EmailService {
 
 	public void sendCommentNotification(SongComment songComment, boolean update) throws Exception {
 
+		CommonUtils utils = new CommonUtils();
+
 		try {
 			String subject = "SOD Comment(s)";
 
 			SodSong sodSong = sodSongRepository.getSongById(songComment.getSongId());
-
-			String videoId = "";
 			String videoUrl = sodSong.getYoutubeUrl();
-			if (videoUrl.startsWith("https://www.youtube.com") && videoUrl.length() >= 43) {
-				videoId = videoUrl.substring(32, 43);
-			} else if (videoUrl.startsWith("https://youtu.be") && videoUrl.length() >= 28) {
-				videoId = videoUrl.substring(17, 28);
-			}
+
+			String songImageUrl = utils.getThumbnailUrl(sodSong.getYoutubeUrl());
 
 			DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 			String activeCommentMarker = "<span style=\"color: red\">* </span>";
@@ -183,7 +178,7 @@ public class EmailService {
 					+ "</head><body>"
 					+ "<div style=\"background-color:#3880FF; color:#FFFFFF; font-size:46px; text-align: center; \">SOD Comment(s)</div><br/>"
 					+ "<div class=\"thumbnail\" align=\"left\" valign=\"middle\" "
-					+ "style=\"border-radius: 15px; width: 300px; height: 168px; background:url('https://i.ytimg.com/vi/" + videoId + "/hqdefault.jpg'); "
+					+ "style=\"border-radius: 15px; width: 300px; height: 168px; background:url('" + songImageUrl + "');"
 					+ "background-size:  cover; background-position: center; margin-bottom: 20px\">"
 					+ "<a href=\"" + videoUrl + "\"" + "target=\"_blank\""
 							+ "style=\"display:block;width:100%;text-decoration:none;height:168px;\"></a>"
@@ -234,8 +229,14 @@ public class EmailService {
 
 	public void sendFlashbackSongs(List<SodSong> sodSongs) throws Exception {
 
+		logger.debug("In sendFlashbackSongs, sodSongs.size(): " + sodSongs.size());
+		CommonUtils utils = new CommonUtils();
+
 		try {
 			LocalDate today = LocalDate.now();
+			LocalDate sevenYearsAgo = today.minusYears(7);
+
+			String displayDate =  String.valueOf(sevenYearsAgo.getMonthValue()) + "-" + String.valueOf(sevenYearsAgo.getDayOfMonth()) + "-" + sevenYearsAgo.getYear();
 
 			String dayOfTheWeek = today.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.getDefault());
 			String title = "Flashback " + dayOfTheWeek + "!";
@@ -281,16 +282,13 @@ public class EmailService {
 
 				int j = 0;
 				for(SodSong sodSong: sodSongs) {
-					String videoId = "";
-					String videoUrl = sodSong.getYoutubeUrl();
-					if (videoUrl.startsWith("https://www.youtube.com") && videoUrl.length() >= 43) {
-						videoId = videoUrl.substring(32, 43);
-					} else if (videoUrl.startsWith("https://youtu.be") && videoUrl.length() >= 28) {
-						videoId = videoUrl.substring(17, 28);
-					}
 
-					String songEmailContent = "<div class=\"thumbnail\" align=\"left\" valign=\"middle\" "
-					+ "style=\"border-radius: 15px; width: 300px; height: 168px; background:url('https://i.ytimg.com/vi/" + videoId + "/hqdefault.jpg'); "
+					String songImageUrl = utils.getThumbnailUrl(sodSong.getYoutubeUrl());
+					String videoUrl = sodSong.getYoutubeUrl();
+
+					String songEmailContent = "<div style=\"margin: 10px 0 10px 0;\">" + "Date: " + displayDate + "</div><br/>"
+					+ "<div class=\"thumbnail\" align=\"left\" valign=\"middle\" "
+					+ "style=\"border-radius: 15px; width: 300px; height: 168px; background:url('" + songImageUrl + "');"
 					+ "background-size:  cover; background-position: center; margin-bottom: 20px\">"
 					+ "<a href=\"" + videoUrl + "\"" + "target=\"_blank\""
 							+ "style=\"display:block;width:100%;text-decoration:none;height:168px;\"></a>"
@@ -342,6 +340,8 @@ public class EmailService {
 
 				boolean html = true;
 				helper.setText(emailContent.toString(), html);
+
+				logger.debug("In sendFlashbackSongs, sending email");
 
 				mailSender.send(mineMessage);
 			logger.debug("Email sent");

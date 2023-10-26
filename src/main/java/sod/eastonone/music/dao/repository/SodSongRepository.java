@@ -33,6 +33,18 @@ public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
 	@Query(value="SELECT * FROM eastonOneSOD.song WHERE SUBSTRING(create_time, 1, 10) = SUBSTRING(DATE_SUB(NOW(),INTERVAL 7 YEAR), 1, 10) ORDER BY song.id", nativeQuery=true)
 	public List<SodSong> getAllSodSongsSevenYearsOld();
 
+	@Query(value="select * from eastonOneSOD.song where youtube_url_valid = false", nativeQuery=true)
+	public List<SodSong> getAllSodSongsWithInvalidUrls();
+
+	@Query(value="select * from eastonOneSOD.song where youtube_url_valid = false and user_id = ?1", nativeQuery=true)
+	public List<SodSong> getAllSodSongsWithInvalidUrlsByUserId(int userId);
+
+	@Query(value="select count(*) from eastonOneSOD.song where youtube_url_valid = false", nativeQuery=true)
+	public int getAllSodSongsWithInvalidUrlsCount();
+
+	@Query(value="select count(*) from eastonOneSOD.song where youtube_url_valid = false and user_id = ?1", nativeQuery=true)
+	public int getAllSodSongsWithInvalidUrlsByUserIdCount(int userId);
+
 	@Transactional
 	@Modifying
 	@Query(value = "UPDATE song s set title =?1 where s.id = ?2", nativeQuery = true)
@@ -52,6 +64,11 @@ public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
 	@Modifying
 	@Query(value = "UPDATE song s set youtube_url =?1 where s.id = ?2", nativeQuery = true)
 	void updateUrlById(String url, String id);
+
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE song s set youtube_url_valid =?1 where s.id = ?2", nativeQuery = true)
+	void updateUrlValidById(boolean urlValid, String id);
 
 	@Transactional
 	@Modifying

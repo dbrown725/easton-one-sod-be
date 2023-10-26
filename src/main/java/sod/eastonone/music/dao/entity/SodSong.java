@@ -54,6 +54,9 @@ public class SodSong implements Serializable {
 	@Column(name = "youtube_url", nullable = false)
 	private String youtubeUrl;
 	
+    @Column(name = "youtube_url_valid", nullable = false, columnDefinition = "default bit 0")
+    private boolean youtubeUrlValid = true;
+
 	@Column(name = "youtube_playlist", nullable = false)
 	private String youtubePlaylist;
 	
