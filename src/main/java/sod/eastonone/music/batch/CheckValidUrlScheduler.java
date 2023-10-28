@@ -29,7 +29,7 @@ public class CheckValidUrlScheduler {
     
     private static final Logger logger = LoggerFactory.getLogger(CheckValidUrlScheduler.class);
 
-	@Scheduled(cron = "0 0 2 * * ?")
+	@Scheduled(cron = "0 0 2 * * SAT")
 	public void cronJobSch() {		
 		logger.debug("CheckValidUrlScheduler job starting");
 		List<SodSong> sodSongs = sodSongRepository.getAllSodSongs();

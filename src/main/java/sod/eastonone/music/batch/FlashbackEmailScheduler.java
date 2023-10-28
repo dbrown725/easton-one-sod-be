@@ -5,7 +5,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +24,7 @@ public class FlashbackEmailScheduler {
     
     private static final Logger logger = LoggerFactory.getLogger(FlashbackEmailScheduler.class);
 
-    @Scheduled(cron = "0 0 12 * * ?")
+//    @Scheduled(cron = "0 0 12 * * ?")
 	public void cronJobSch() {		
 		logger.debug("Flashback email job starting");
 		List<SodSong> sodSongs = sodSongRepository.getAllSodSongsSevenYearsOld();
