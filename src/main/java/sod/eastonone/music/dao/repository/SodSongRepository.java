@@ -30,19 +30,19 @@ public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
 	@Query(value="SELECT * FROM song where song.id IN (:songIds) ORDER BY song.id", nativeQuery=true)
 	public List<SodSong> getAllSodSongsWithIDsIn(@Param("songIds") int[] songIds);
 
-	@Query(value="SELECT * FROM eastonOneSOD.song WHERE SUBSTRING(create_time, 1, 10) = SUBSTRING(DATE_SUB(NOW(),INTERVAL 7 YEAR), 1, 10) ORDER BY song.id", nativeQuery=true)
+	@Query(value="SELECT * FROM song WHERE SUBSTRING(create_time, 1, 10) = SUBSTRING(DATE_SUB(NOW(),INTERVAL 7 YEAR), 1, 10) ORDER BY song.id", nativeQuery=true)
 	public List<SodSong> getAllSodSongsSevenYearsOld();
 
-	@Query(value="select * from eastonOneSOD.song where youtube_url_valid = false", nativeQuery=true)
+	@Query(value="select * from song where youtube_url_valid = false", nativeQuery=true)
 	public List<SodSong> getAllSodSongsWithInvalidUrls();
 
-	@Query(value="select * from eastonOneSOD.song where youtube_url_valid = false and user_id = ?1", nativeQuery=true)
+	@Query(value="select * from song where youtube_url_valid = false and user_id = ?1", nativeQuery=true)
 	public List<SodSong> getAllSodSongsWithInvalidUrlsByUserId(int userId);
 
-	@Query(value="select count(*) from eastonOneSOD.song where youtube_url_valid = false", nativeQuery=true)
+	@Query(value="select count(*) from song where youtube_url_valid = false", nativeQuery=true)
 	public int getAllSodSongsWithInvalidUrlsCount();
 
-	@Query(value="select count(*) from eastonOneSOD.song where youtube_url_valid = false and user_id = ?1", nativeQuery=true)
+	@Query(value="select count(*) from song where youtube_url_valid = false and user_id = ?1", nativeQuery=true)
 	public int getAllSodSongsWithInvalidUrlsByUserIdCount(int userId);
 
 	@Transactional

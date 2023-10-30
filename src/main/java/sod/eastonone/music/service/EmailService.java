@@ -279,6 +279,7 @@ public class EmailService {
 			emailContent.append(emailStart);
 
 			if(sodSongs != null && sodSongs.size() != 0) {
+				emailContent.append("<div style=\"margin: 10px 0 10px 0;\">" + "Songs posted on: " + displayDate + "</div><br/>");
 
 				int j = 0;
 				for(SodSong sodSong: sodSongs) {
@@ -286,8 +287,7 @@ public class EmailService {
 					String songImageUrl = utils.getThumbnailUrl(sodSong.getYoutubeUrl());
 					String videoUrl = sodSong.getYoutubeUrl();
 
-					String songEmailContent = "<div style=\"margin: 10px 0 10px 0;\">" + "Date: " + displayDate + "</div><br/>"
-					+ "<div class=\"thumbnail\" align=\"left\" valign=\"middle\" "
+					String songEmailContent = "<div class=\"thumbnail\" align=\"left\" valign=\"middle\" "
 					+ "style=\"border-radius: 15px; width: 300px; height: 168px; background:url('" + songImageUrl + "');"
 					+ "background-size:  cover; background-position: center; margin-bottom: 20px\">"
 					+ "<a href=\"" + videoUrl + "\"" + "target=\"_blank\""
@@ -315,7 +315,7 @@ public class EmailService {
 				}
 
 			} else {
-				emailContent.append("No songs submitted on this date.<br/>");
+				emailContent.append("No songs submitted on this date: " + displayDate + ".<br/>");
 			}
 
 			String emailEnd = "<br/><div> Visit the "
