@@ -241,7 +241,31 @@ public class SodSongService {
 		SodSong song = sodSongRepository.getSongById(songId);
 		return new Song(song);
 	}
-
+	
+	public List<Song>  getRandomSongs(int count) {
+		List<Song> songs = new ArrayList<Song>();
+		for(SodSong sodSong: sodSongRepository.getRandomSongs(count)) {
+			songs.add(new Song(sodSong));
+		}
+		return songs;
+	}
+	
+	public List<Song>  getRandomSongsByUserId(int userId, int count) {
+		List<Song> songs = new ArrayList<Song>();
+		for(SodSong sodSong: sodSongRepository.getRandomSongsByUserId(userId, count)) {
+			songs.add(new Song(sodSong));
+		}
+		return songs;
+	}
+	
+	public List<Song>  getSongsByIds(List<Integer> songIds) {
+		List<Song> songs = new ArrayList<Song>();
+		for(SodSong sodSong: sodSongRepository.getSongsByIds(songIds)) {
+			songs.add(new Song(sodSong));
+		}
+		return songs;
+	}
+	
     public List<Song> songsBySearchText(String searchText) throws IOException{
     	Song song = new Song();
     	song.setTitle(searchText);

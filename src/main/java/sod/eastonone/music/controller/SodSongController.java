@@ -142,6 +142,51 @@ public class SodSongController {
 		logger.debug("Exiting getAllInvalidUrlSodSongs for user " + user.getId());
 		return songs;
 	}
+	
+	@QueryMapping
+	public List<Song> getRandomSongs(@Argument int count, @AuthenticationPrincipal User user) throws IOException {
+		logger.debug("Entering getRandomSongs for user " + user.getId() + " with count: " + count);
+		List<Song> songs = new ArrayList<Song>();
+		try {
+			songs = sodSongService.getRandomSongs(count);
+			generalHelper.setUserSubmitterAndPrivacy(songs, user);
+		} catch (Exception e) {
+			logger.error("getRandomSongs: error caught with count " + count + " for user " + user.getId() + " with count: " + count, e);
+			throw e;
+		}
+		logger.debug("Exiting getRandomSongs for user " + user.getId() + " with count: " + count);
+		return songs;
+	}
+	
+	@QueryMapping
+	public List<Song> getRandomSongsByUserId(@Argument int count, @Argument int userId, @AuthenticationPrincipal User user) throws IOException {
+		logger.debug("Entering getRandomSongsByUserId for user " + user.getId() + " with count: " + count + " for userId " + userId);
+		List<Song> songs = new ArrayList<Song>();
+		try {
+			songs = sodSongService.getRandomSongsByUserId(userId, count);
+			generalHelper.setUserSubmitterAndPrivacy(songs, user);
+		} catch (Exception e) {
+			logger.error("getRandomSongsByUserId: error caught with count " + count + " for user " + user.getId() + " with count: " + count + " for userId " + userId, e);
+			throw e;
+		}
+		logger.debug("Exiting getRandomSongsByUserId for user " + user.getId() + " with count: " + count + " for userId " + userId);
+		return songs;
+	}
+	
+	@QueryMapping
+	public List<Song> getSongsByIds(@Argument List<Integer> songIds, @AuthenticationPrincipal User user) throws IOException {
+		logger.debug("Entering getSongsByIds for user " + user.getId() + " with songIds: " + songIds);
+		List<Song> songs = new ArrayList<Song>();
+		try {
+			songs = sodSongService.getSongsByIds(songIds);
+			generalHelper.setUserSubmitterAndPrivacy(songs, user);
+		} catch (Exception e) {
+			logger.error("getSongsByIds: error caught with user " + user.getId() + " with songIds: " + songIds , e);
+			throw e;
+		}
+		logger.debug("Exiting getSongsByIds for user " + user.getId() + " with songIds: " + songIds);
+		return songs;
+	}
 
 	@MutationMapping
 	public Song insertSodSong(@Argument String title, @Argument String playlist, @Argument String link,

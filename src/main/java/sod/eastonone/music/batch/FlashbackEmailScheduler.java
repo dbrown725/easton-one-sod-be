@@ -14,7 +14,6 @@ import sod.eastonone.music.dao.repository.SodSongRepository;
 import sod.eastonone.music.service.EmailService;
 
 @Component
-@Transactional
 public class FlashbackEmailScheduler {
 
 	@Autowired
@@ -25,6 +24,7 @@ public class FlashbackEmailScheduler {
     
     private static final Logger logger = LoggerFactory.getLogger(FlashbackEmailScheduler.class);
 
+    @Transactional
     @Scheduled(cron = "0 0 12 * * ?")
 	public void cronJobSch() {		
 		logger.debug("Flashback email job starting");

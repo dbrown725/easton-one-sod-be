@@ -44,7 +44,16 @@ public interface SodSongRepository extends JpaRepository<SodSong, Integer> {
 
 	@Query(value="select count(*) from song where youtube_url_valid = false and user_id = ?1", nativeQuery=true)
 	public int getAllSodSongsWithInvalidUrlsByUserIdCount(int userId);
+	
+	@Query(value="SELECT * FROM song ORDER BY RAND() LIMIT ?1", nativeQuery=true)
+	public List<SodSong> getRandomSongs(int count);
+	
+	@Query(value="SELECT * FROM song where user_id = ?1 ORDER BY RAND() LIMIT ?2", nativeQuery=true)
+	public List<SodSong> getRandomSongsByUserId(int userId, int count);
 
+	@Query(value="SELECT * FROM song where song.id in (:ids);", nativeQuery=true)
+	public List<SodSong> getSongsByIds(@Param("ids") List<Integer> ids);
+	
 	@Transactional
 	@Modifying
 	@Query(value = "UPDATE song s set title =?1 where s.id = ?2", nativeQuery = true)

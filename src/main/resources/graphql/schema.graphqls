@@ -13,6 +13,9 @@ type Query {
   getUserRole(userId: ID): String
   getBandStats(count: Int, userId: ID): [BandStats]
   getUsersForDropDown: [User]
+  getRandomSongs(count: Int): [Song]
+  getRandomSongsByUserId(userId: ID, count: Int): [Song]
+  getSongsByIds(songIds: [Int]): [Song]
 }
 
 type Mutation {
