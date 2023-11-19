@@ -107,12 +107,30 @@ public class UserController {
 
 		try {
 			sod.eastonone.music.dao.entity.User dbUser = userService.updatePrivacyOn(privacyOn, user.getId());
-			user.setEmailPreference(dbUser.getEmailPreference().name());
+			user.setPrivacyOn(dbUser.isPrivacyOn());
 		} catch (Exception e) {
 			logger.error("updatePrivacy: error caught updating user with privacyOn " + privacyOn + " for user " + user.getId(), e);
 			throw e;
 		}
 		logger.debug("Exiting updatePrivacy");
+		return user;
+	}
+	
+	@MutationMapping
+	public User updateDarkModeOn(@Argument boolean darkModeOn,
+			@AuthenticationPrincipal User user) {
+
+		logger.debug("Entering updateDarkModeOn");
+		logger.info("updateDarkModeOn: Updating user updateDarkModeOn with value " + darkModeOn + " for user " + user.getId());
+
+		try {
+			sod.eastonone.music.dao.entity.User dbUser = userService.updateDarkModeOn(darkModeOn, user.getId());
+			user.setDarkModeOn(dbUser.isDarkModeOn());
+		} catch (Exception e) {
+			logger.error("updateDarkModeOn: error caught updating user with privacyOn " + darkModeOn + " for user " + user.getId(), e);
+			throw e;
+		}
+		logger.debug("Exiting updateDarkModeOn");
 		return user;
 	}
 

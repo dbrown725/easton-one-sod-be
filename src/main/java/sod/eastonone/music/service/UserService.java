@@ -41,6 +41,15 @@ public class UserService {
 
 		return this.userRepository.save(user);
 	}
+	
+	@Transactional
+	public User updateDarkModeOn(final boolean darkModeOn, final int userId) {
+
+		User user = getUser(userId);
+		user.setDarkModeOn(darkModeOn);
+
+		return this.userRepository.save(user);
+	}
 
 	@Transactional(readOnly = true)
 	public List<User> getAllUsers() {

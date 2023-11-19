@@ -32,6 +32,7 @@ type Mutation {
    deleteSongComment(id: ID!): Boolean
    updateEmailPreference(emailPreference: String!): User
    updatePrivacyOn(privacyOn: Boolean!): User
+   updateDarkModeOn(darkModeOn: Boolean!): User
 }
 
 type Book {
@@ -92,6 +93,7 @@ type User {
   email: String
   emailPreference: String
   privacyOn: Boolean
+  darkModeOn: Boolean
   isEmailVerified: Boolean
   issuer: String
   firstName: String

@@ -61,6 +61,9 @@ public class User implements Serializable {
 
     @Column(name = "privacy_on", nullable = false, columnDefinition = "default bit 0")
     private boolean privacyOn = false;
+    
+    @Column(name = "dark_mode_on", nullable = false, columnDefinition = "default bit 0")
+    private boolean darkModeOn = false;
 
     @Column(name = "avatar_color", nullable = false)
     private String avatarColor;

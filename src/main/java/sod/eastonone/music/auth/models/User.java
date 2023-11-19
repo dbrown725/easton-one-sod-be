@@ -17,6 +17,7 @@ public class User implements Serializable {
 	private String email;
 	private String emailPreference;
 	private boolean privacyOn;
+	private boolean darkModeOn;
 	private boolean isEmailVerified;
 	private String issuer;
 	private String picture;

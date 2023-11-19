@@ -89,6 +89,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         	user.setAvatarColor(daoUser.getAvatarColor());
         	user.setEmailPreference(daoUser.getEmailPreference().name());
         	user.setPrivacyOn(daoUser.isPrivacyOn());
+        	user.setDarkModeOn(daoUser.isDarkModeOn());
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user,
                     new Credentials(type, decodedToken, token, session), null);
